@@ -1,0 +1,861 @@
+# Created by Octave 5.2.0, Thu Feb 04 13:14:28 2021 GMT <unknown@Oliver-PC>
+# name: tolFun
+# type: scalar
+1e-10
+
+
+# name: maxIter
+# type: scalar
+50
+
+
+# name: paramn
+# type: matrix
+# rows: 18
+# columns: 1
+ 0
+ 4
+ 0.5
+ 3.5
+ 0.40000000000000002
+ 0.25
+ 0
+ 1
+ 4
+ 0.20000000000000001
+ 0.10000000000000001
+ 1.4119999999999999
+ 0
+ 0
+ 800
+ 1800
+ 0
+ 0
+
+
+# name: paramFinish
+# type: matrix
+# rows: 18
+# columns: 1
+ 0
+ 8.0001183042899786
+ 3.0001604734566376
+ 3.4994138438796041
+ 0.60404082759543454
+ 0.29991516835346999
+ 0
+ 0.87004887760640193
+ 4
+ 0.29996623466263056
+ 0.14999022944062348
+ 1.4118270775351782
+ 0
+ 0
+ 922.82752839645184
+ 1774.3074501686585
+ -0.072941318070377709
+ 0
+
+
+# name: param1
+# type: matrix
+# rows: 6
+# columns: 1
+ 3.753333150463908
+ 0.80297714516195695
+ 3.9627234407459917
+ 0.57093375303550653
+ 1
+ 0.79595837761346444
+
+
+# name: convergence1
+# type: string
+# elements: 1
+# length: 40
+Change in calculated function too small.
+
+
+# name: outp1
+# type: scalar struct
+# ndims: 2
+ 1 1
+# length: 3
+# name: user_interaction
+# type: scalar struct
+# ndims: 2
+ 1 1
+# length: 2
+# name: stop
+# type: bool
+0
+
+
+# name: info
+# type: cell
+# rows: 1
+# columns: 1
+# name: <cell-element>
+# type: string
+# elements: 0
+
+
+
+
+
+
+
+# name: niter
+# type: scalar
+8
+
+
+# name: lambda
+# type: scalar struct
+# ndims: 2
+ 1 1
+# length: 6
+# name: lower
+# type: matrix
+# rows: 6
+# columns: 1
+ 0
+ 0
+ 0
+ 0
+ 0
+ 0
+
+
+# name: upper
+# type: matrix
+# rows: 6
+# columns: 1
+ 0
+ 0
+ 0
+ 0
+ 835.67669626156317
+ 0
+
+
+# name: eqlin
+# type: matrix
+# rows: 0
+# columns: 1
+
+
+# name: ineqlin
+# type: matrix
+# rows: 0
+# columns: 1
+
+
+# name: eqnonlin
+# type: matrix
+# rows: 0
+# columns: 1
+
+
+# name: ineqnonlin
+# type: matrix
+# rows: 0
+# columns: 1
+
+
+
+
+
+
+# name: result1
+# type: scalar struct
+# ndims: 2
+ 1 1
+# length: 2
+# name: covp
+# type: matrix
+# rows: 6
+# columns: 6
+ 59.870780928414575 7.2988355073360003 3.1740512560726071 3.7726315220934681 6.1300002456665688 0.22508460894991345
+ 7.2988355073362348 1.2515659053076202 0.15118901991245132 0.16669965769548534 0.31226879467353408 -7.8455620924622327e-05
+ 3.1740512560723424 0.15118901991240327 0.45991194908583627 0.47640543934149571 0.9377096286723664 0.054135946055490269
+ 3.7726315220931852 0.16669965769543546 0.47640543934149393 0.53068599974768227 0.94171874798712019 0.052069188281985951
+ 6.1300002456660385 0.31226879467343627 0.93770962867236829 0.94171874798712585 1.939544245704018 0.11389257371518285
+ 0.2250846089498787 -7.8455620930568959e-05 0.05413594605548977 0.052069188281985659 0.11389257371518166 0.0075859336584536644
+
+
+# name: corp
+# type: matrix
+# rows: 6
+# columns: 6
+ 1 0.84317797338269262 0.6048798642464791 0.66929581964837526 0.56885710238485332 0.3339902722358109
+ 0.84317797338271971 1 0.19927647998422812 0.20454507680603684 0.20042499404835021 -0.00080517944942278571
+ 0.6048798642464287 0.19927647998416478 0.99999999999999989 0.96431861312824374 0.99284438313427259 0.9165240466359027
+ 0.66929581964832507 0.20454507680597564 0.96431861312824008 1 0.92822349210586241 0.82064905175416714
+ 0.56885710238480414 0.20042499404828742 0.99284438313427459 0.92822349210586808 1 0.93894691916691231
+ 0.33399027223575939 -0.00080517944948381524 0.91652404663589426 0.82064905175416247 0.93894691916690254 1
+
+
+
+
+# name: stdabw1
+# type: matrix
+# rows: 6
+# columns: 1
+ 7.7376211414371134
+ 1.1187340637111307
+ 0.67816808321081901
+ 0.72848198313182888
+ 1.3926752118509247
+ 0.087097265505029858
+
+
+# name: mat1
+# type: matrix
+# rows: 6
+# columns: 4
+ 3.753333150463908 7.7376211414371134 15.475242282874227 23.21286342431134
+ 0.80297714516195695 1.1187340637111307 2.2374681274222614 3.3562021911333924
+ 3.9627234407459917 0.67816808321081901 1.356336166421638 2.034504249632457
+ 0.57093375303550653 0.72848198313182888 1.4569639662636578 2.1854459493954868
+ 1 1.3926752118509247 2.7853504237018494 4.1780256355527738
+ 0.79595837761346444 0.087097265505029858 0.17419453101005972 0.2612917965150896
+
+
+# name: param2
+# type: matrix
+# rows: 3
+# columns: 1
+ 4
+ 0.19746272039135856
+ 0.2268250918658434
+
+
+# name: convergence2
+# type: string
+# elements: 1
+# length: 40
+Change in calculated function too small.
+
+
+# name: outp2
+# type: scalar struct
+# ndims: 2
+ 1 1
+# length: 3
+# name: user_interaction
+# type: scalar struct
+# ndims: 2
+ 1 1
+# length: 2
+# name: stop
+# type: bool
+0
+
+
+# name: info
+# type: cell
+# rows: 1
+# columns: 1
+# name: <cell-element>
+# type: string
+# elements: 0
+
+
+
+
+
+
+
+# name: niter
+# type: scalar
+6
+
+
+# name: lambda
+# type: scalar struct
+# ndims: 2
+ 1 1
+# length: 6
+# name: lower
+# type: matrix
+# rows: 3
+# columns: 1
+ 0
+ 0
+ 0
+
+
+# name: upper
+# type: matrix
+# rows: 3
+# columns: 1
+ 0
+ 0
+ 0
+
+
+# name: eqlin
+# type: matrix
+# rows: 0
+# columns: 1
+
+
+# name: ineqlin
+# type: matrix
+# rows: 0
+# columns: 1
+
+
+# name: eqnonlin
+# type: matrix
+# rows: 0
+# columns: 1
+
+
+# name: ineqnonlin
+# type: matrix
+# rows: 0
+# columns: 1
+
+
+
+
+
+
+# name: result2
+# type: scalar struct
+# ndims: 2
+ 1 1
+# length: 2
+# name: covp
+# type: matrix
+# rows: 3
+# columns: 3
+ 0.00018075867202500752 0.0018868772090363114 -0.00076381673168844459
+ 0.0018868772090363114 0.038845914886614964 -0.0096932562763448193
+ -0.00076381673168844459 -0.0096932562763448193 0.0035266637782599866
+
+
+# name: corp
+# type: matrix
+# rows: 3
+# columns: 3
+ 0.99999999999999989 0.71206787118061721 -0.95665989491389036
+ 0.71206787118061721 1 -0.82816140909913305
+ -0.95665989491389036 -0.82816140909913305 1
+
+
+
+
+# name: stdabw2
+# type: matrix
+# rows: 3
+# columns: 1
+ 0.013444652171960699
+ 0.19709367033625144
+ 0.059385720322818233
+
+
+# name: mat2
+# type: matrix
+# rows: 3
+# columns: 4
+ 4 0.013444652171960699 0.026889304343921398 0.040333956515882098
+ 0.19746272039135856 0.19709367033625144 0.39418734067250288 0.5912810110087543
+ 0.2268250918658434 0.059385720322818233 0.11877144064563647 0.17815716096845469
+
+
+# name: param3
+# type: matrix
+# rows: 6
+# columns: 1
+ 0
+ 0
+ 662.10478019879281
+ 1891.9241502539735
+ -0.071917934595439131
+ 0
+
+
+# name: convergence3
+# type: string
+# elements: 1
+# length: 40
+Change in calculated function too small.
+
+
+# name: outp3
+# type: scalar struct
+# ndims: 2
+ 1 1
+# length: 3
+# name: user_interaction
+# type: scalar struct
+# ndims: 2
+ 1 1
+# length: 2
+# name: stop
+# type: bool
+0
+
+
+# name: info
+# type: cell
+# rows: 1
+# columns: 1
+# name: <cell-element>
+# type: string
+# elements: 0
+
+
+
+
+
+
+
+# name: niter
+# type: scalar
+1
+
+
+# name: lambda
+# type: scalar struct
+# ndims: 2
+ 1 1
+# length: 6
+# name: lower
+# type: matrix
+# rows: 6
+# columns: 1
+ 0
+ 0
+ 0
+ 0
+ 0
+ 0
+
+
+# name: upper
+# type: matrix
+# rows: 6
+# columns: 1
+ 0
+ 0
+ 0
+ 0
+ 0
+ 0
+
+
+# name: eqlin
+# type: matrix
+# rows: 0
+# columns: 1
+
+
+# name: ineqlin
+# type: matrix
+# rows: 0
+# columns: 1
+
+
+# name: eqnonlin
+# type: matrix
+# rows: 0
+# columns: 1
+
+
+# name: ineqnonlin
+# type: matrix
+# rows: 0
+# columns: 1
+
+
+
+
+
+
+# name: result3
+# type: scalar struct
+# ndims: 2
+ 1 1
+# length: 1
+# name: covp
+# type: diagonal matrix
+# rows: 6
+# columns: 6
+100
+100
+100
+100
+100
+100
+
+
+
+
+# name: stdabw3
+# type: matrix
+# rows: 1
+# columns: 6
+ 10 10 10 10 10 10
+
+
+# name: mat3
+# type: matrix
+# rows: 6
+# columns: 4
+ 0 10 20 30
+ 0 10 20 30
+ 662.10478019879281 10 20 30
+ 1891.9241502539735 10 20 30
+ -0.071917934595439131 10 20 30
+ 0 10 20 30
+
+
+# name: param4
+# type: scalar
+1.38632808369482
+
+
+# name: convergence4
+# type: string
+# elements: 1
+# length: 40
+Change in calculated function too small.
+
+
+# name: outp4
+# type: scalar struct
+# ndims: 2
+ 1 1
+# length: 3
+# name: user_interaction
+# type: scalar struct
+# ndims: 2
+ 1 1
+# length: 2
+# name: stop
+# type: bool
+0
+
+
+# name: info
+# type: cell
+# rows: 1
+# columns: 1
+# name: <cell-element>
+# type: string
+# elements: 0
+
+
+
+
+
+
+
+# name: niter
+# type: scalar
+14
+
+
+# name: lambda
+# type: scalar struct
+# ndims: 2
+ 1 1
+# length: 6
+# name: lower
+# type: scalar
+0
+
+
+# name: upper
+# type: scalar
+0
+
+
+# name: eqlin
+# type: matrix
+# rows: 1
+# columns: 0
+
+
+
+# name: ineqlin
+# type: matrix
+# rows: 1
+# columns: 0
+
+
+
+# name: eqnonlin
+# type: matrix
+# rows: 1
+# columns: 0
+
+
+
+# name: ineqnonlin
+# type: matrix
+# rows: 1
+# columns: 0
+
+
+
+
+
+
+
+# name: result4
+# type: scalar struct
+# ndims: 2
+ 1 1
+# length: 2
+# name: covp
+# type: scalar
+0.00011346555333195873
+
+
+# name: corp
+# type: scalar
+1
+
+
+
+
+# name: stdabw4
+# type: scalar
+0.010652021091415409
+
+
+# name: mat4
+# type: matrix
+# rows: 1
+# columns: 4
+ 1.38632808369482 0.010652021091415409 0.021304042182830819 0.03195606327424623
+
+
+# name: param5
+# type: matrix
+# rows: 16
+# columns: 1
+ 8.0001183042899786
+ 3.0001604734566376
+ 3.4994138438796041
+ 0.60404082759543454
+ 0.29991516835346999
+ 0.87004887760640193
+ 4
+ 0.29996623466263056
+ 1.4118270775351782
+ 0.14999022944062348
+ 0
+ 0
+ 922.82752839645184
+ 1774.3074501686585
+ -0.072941318070377709
+ 0
+
+
+# name: convergence5
+# type: string
+# elements: 1
+# length: 40
+Change in calculated function too small.
+
+
+# name: outp5
+# type: scalar struct
+# ndims: 2
+ 1 1
+# length: 3
+# name: user_interaction
+# type: scalar struct
+# ndims: 2
+ 1 1
+# length: 2
+# name: stop
+# type: bool
+0
+
+
+# name: info
+# type: cell
+# rows: 1
+# columns: 1
+# name: <cell-element>
+# type: string
+# elements: 0
+
+
+
+
+
+
+
+# name: niter
+# type: scalar
+12
+
+
+# name: lambda
+# type: scalar struct
+# ndims: 2
+ 1 1
+# length: 6
+# name: lower
+# type: matrix
+# rows: 16
+# columns: 1
+ 0
+ 0
+ 0
+ 0
+ 0
+ 0
+ 0
+ 0
+ 0
+ 0
+ 0
+ 0
+ 0
+ 0
+ 0
+ 0
+
+
+# name: upper
+# type: matrix
+# rows: 16
+# columns: 1
+ 0
+ 0
+ 0
+ 0
+ 0
+ 0
+ 0
+ 0
+ 0
+ 0
+ 0
+ 0
+ 0
+ 0
+ 0
+ 0
+
+
+# name: eqlin
+# type: matrix
+# rows: 0
+# columns: 1
+
+
+# name: ineqlin
+# type: matrix
+# rows: 0
+# columns: 1
+
+
+# name: eqnonlin
+# type: matrix
+# rows: 0
+# columns: 1
+
+
+# name: ineqnonlin
+# type: matrix
+# rows: 0
+# columns: 1
+
+
+
+
+
+
+# name: result5
+# type: scalar struct
+# ndims: 2
+ 1 1
+# length: 1
+# name: covp
+# type: diagonal matrix
+# rows: 16
+# columns: 16
+100
+100
+100
+100
+100
+100
+100
+100
+100
+100
+100
+100
+100
+100
+100
+100
+
+
+
+
+# name: stdabw5
+# type: matrix
+# rows: 16
+# columns: 1
+ 10
+ 10
+ 10
+ 10
+ 10
+ 10
+ 10
+ 10
+ 10
+ 10
+ 10
+ 10
+ 10
+ 10
+ 10
+ 10
+
+
+# name: mat5
+# type: matrix
+# rows: 16
+# columns: 4
+ 8.0001183042899786 10 20 30
+ 3.0001604734566376 10 20 30
+ 3.4994138438796041 10 20 30
+ 0.60404082759543454 10 20 30
+ 0.29991516835346999 10 20 30
+ 0.87004887760640193 10 20 30
+ 4 10 20 30
+ 0.29996623466263056 10 20 30
+ 1.4118270775351782 10 20 30
+ 0.14999022944062348 10 20 30
+ 0 10 20 30
+ 0 10 20 30
+ 922.82752839645184 10 20 30
+ 1774.3074501686585 10 20 30
+ -0.072941318070377709 10 20 30
+ 0 10 20 30
+
+
+# name: rQuadratFit
+# type: scalar
+0.99999970403913008
+
+
+# name: chiQuadratFit
+# type: scalar
+-899.94123581750011
+
+
