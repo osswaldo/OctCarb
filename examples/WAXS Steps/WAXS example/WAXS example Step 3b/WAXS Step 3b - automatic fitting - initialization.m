@@ -2,7 +2,7 @@ clear;
 
 timeStart = time();
 
-#Initial values for fitting. k & const1 should be roughly adjusted manually. nu depends on the experiment, for Cu-radiation, 4 is sufficent. Mostly, g can be 0 (switch with useGradient = true/false).
+#Initial values for fitting. k & const1 should be roughly adjusted manually. nu depends on the experiment, for Cu-radiation, 4 is sufficient. Mostly, g can be 0 (switch with useGradient = true/false).
 u3 = 0; #Generally not refined and not outputted
 mu     = 4;
 beta   = 0.5;
@@ -21,7 +21,7 @@ k      = 800;      # Step 2
 const1 = 1800;     # Step 2
 const2 = 0;
 
-#Switch for usage of gradient g and concentrations of inpurities
+#Switch for usage of gradient g and concentrations of impurities
 useGradient = false;
 g      = 0;
 
@@ -35,7 +35,7 @@ cS  = 0.02; #Concentration of sulfur     # Step 2 (known from elemental analysis
 plotOnly = false;     # Step 3b
 
 #Graphical output (has to be "false" if using octave-cli).  ('global' can be ignored, but must be present, it is necessary)
-#Global variables can only be resettet restarting Octave.
+#Global variables can only be resetted restarting Octave.
 global shouldPlot = true;
 
 #Name of the series and id of the sample
@@ -50,10 +50,10 @@ cd 'D:/OneDrive/Uni/PhD/Paper Octave/Github/NGCs/examples/WAXS Steps';          
 #Measurement data file
 measFile = 'D:/OneDrive/Uni/PhD/Paper Octave/Github/NGCs/examples/WAXS Steps/WAXS example data.xy'; # Step 1
 
-#Corrections for Wide-Angle Neutron Scattering (WANS) experiments, only meaningful, if radation = 1 (means neutrons scattering)
+#Corrections for Wide-Angle Neutron Scattering (WANS) experiments, only meaningful, if radiation = 1 (means neutrons scattering)
 neutronCorrection = false;
 
-#Useful for samples containing hydrogen. Using this method, a Pseudo-Voigt function will vbe used to fit the background istead of a polynom. If false, the Placzek correction (a*x^2 + b) will be used for the background determination.
+#Useful for samples containing hydrogen. Using this method, a Pseudo-Voigt function will be used to fit the background instead of a polynomial. If false, the Placzek correction (a*x^2 + b) will be used for the background determination.
 neutronCorrectionVoigt = false;
 
 #Wavelength and type of radiation (0 = X-ray, 1 = neutrons)
@@ -73,7 +73,7 @@ inc = true;
 #scatQ = Scattering vector q = 2*Pi*s
 type = "twoTheta";                                 # Step 1
 
-#Octave must be restarted after changing one of the below lines
+#Octave must be restarted after changing one of the below liness
 #Skip n points at start
 nStart = 0;
 
@@ -103,7 +103,7 @@ ub3 = [q; dan;  10000; +100000; +100; +1];
 lb4 = [1.2];
 ub4 = [1.8];
 
-#Function toleranz
+#Function tolerance
 tolFun = 1e-10;
 
 #Maximal iterations per fit step
@@ -128,7 +128,7 @@ useP                  = true;    #Polarization correction
 polarizedBeam         = false;   #Do you use a polarized beam?
 polarizationDegree    = 0;       #Polarization direction of beam in °.
 
-useCorrAutoColl = false;  #Slit-correction
+useCorrAutoColl = false;  #Slit correction
 par_r           = 14;	    #Radius of the diffractometer (Debye-Scherrer) in cm
 par_delta       = 4;	    #Divergence angle in ° (it is converted as if this fixed slit were inside)
 par_l           = 5;	    #Irradiated length in cm
@@ -265,13 +265,13 @@ function SofQ = lorgaunCorrection(x, y, minX = 0, maxX = 100)
   options.MaxIter = 50;
   options.TolFun = 1e-100000;
   
-  #Normalization k, widthness w, ration eta
+  #Normalization k, width w, ration eta
   options.lbound = [0.01; 0.1; 0];
   options.ubound = [1e10; 100; 1];
   
   pin = [50000; 15; 0.5];
   
-  #Normalization k, widthness w, middle, x0, shift y0, ration eta
+  #Normalization k, width w, middle, x0, shift y0, ration eta
   f = @ (p, x) (pseudoVoigt(x, p(1), p(2), 0, 0, p(3)));
   
   [p, fy, cvg, outp] = nonlin_curvefit(f, pin, xnew, ynew, options);
@@ -346,7 +346,7 @@ function [stop, info] = outfun(p, optimValues, state)
   
   if shouldPlot == true
     plot99 = figure(99);
-    plot(x, ynglobal, ".k;Datenpunkte;", "markersize", 10, x, y, strcat({"r;Fit at "},  asctime (localtime (time)), ";"), "LineWidth", 3);
+    plot(x, ynglobal, ".k;Data points;", "markersize", 10, x, y, strcat({"r;Fit at "},  asctime (localtime (time)), ";"), "LineWidth", 3);
 	xlabel ("Scattering vector s / A^-^1");
 	ylabel ("Intensity I");
 	title ("Current refinement step");
@@ -477,7 +477,7 @@ options1.weights = wtWeight;
 options1.TypicalX = typicalX;
 options1.user_interaction = @outfun;
 
-#options1.inequc = ; Additional constraints: Further inequality constraints. Cell-array containing up to four entries, two entries for linear inequality constraints and/or one or two entries for general inequality constraints. Either linear or general constraints may be the first entries, but the two entries for linear constraints must be adjacent and, if two entries are given for general constraints, they also must be adjacent. The two entries for linear constraints are a matrix (say m) and a vector (say v), specifying linear inequality constraints of the form m.' * parameters + v >= 0. The first entry for general constraints must be a differentiable column-vector valued function (say h), specifying general inequality constraints of the form h (p[, idx]) >= 0; p is the column vector of optimized paraters and the optional argument idx is a logical index. h has to return the values of all constraints if idx is not given. It may choose to return only the indexed constraints if idx is given (so computation of the other constraints can be spared); in this case, the additional setting f_inequc_idx has to be set to true. In gradient determination, this function may be called with an informational third argument, whose content depends on the function for gradient determination. If a second entry for general inequality constraints is given, it must be a function computing the jacobian of the constraints with respect to the parameters. For this function, the description of the setting dfdp, see dfdp, applies, with 2 exceptions: 1) it is called with 3 arguments since it has an additional argument idx, a logical index, at second position, indicating which rows of the jacobian must be returned (if the function chooses to return only indexed rows, the additional setting df_inequc_idx has to be set to true). 2) the default jacobian function calls h with 3 arguments, since the argument idx is also supplied. Note that specifying linear constraints as general constraints will generally waste performance, even if further, non-linear, general constraints are also specified. 
+#options1.inequc = ; Additional constraints: Further inequality constraints. Cell-array containing up to four entries, two entries for linear inequality constraints and/or one or two entries for general inequality constraints. Either linear or general constraints may be the first entries, but the two entries for linear constraints must be adjacent and, if two entries are given for general constraints, they also must be adjacent. The two entries for linear constraints are a matrix (say m) and a vector (say v), specifying linear inequality constraints of the form m.' * parameters + v >= 0. The first entry for general constraints must be a differentiable column-vector valued function (say h), specifying general inequality constraints of the form h (p[, idx]) >= 0; p is the column vector of optimized parameters and the optional argument idx is a logical index. h has to return the values of all constraints if idx is not given. It may choose to return only the indexed constraints if idx is given (so computation of the other constraints can be spared); in this case, the additional setting f_inequc_idx has to be set to true. In gradient determination, this function may be called with an informational third argument, whose content depends on the function for gradient determination. If a second entry for general inequality constraints is given, it must be a function computing the jacobian of the constraints with respect to the parameters. For this function, the description of the setting dfdp, see dfdp, applies, with 2 exceptions: 1) it is called with 3 arguments since it has an additional argument idx, a logical index, at second position, indicating which rows of the jacobian must be returned (if the function chooses to return only indexed rows, the additional setting df_inequc_idx has to be set to true). 2) the default jacobian function calls h with 3 arguments, since the argument idx is also supplied. Note that specifying linear constraints as general constraints will generally waste performance, even if further, non-linear, general constraints are also specified. 
 #options1.equc = ; Equality constraints. Specified the same way as inequality constraints (see inequc above). 
 #options1.dfdp = ; Function computing the Jacobian of the residuals with respect to the parameters, assuming residuals are reshaped to a column vector. Default: real finite differences. Will be called with the column vector of parameters and an informational structure as arguments. If dfdp was specified by the user, the informational structure has the fields f: value of residuals for current parameters, reshaped to a column vector, fixed: logical vector indicating which parameters are not optimized, so these partial derivatives need not be computed and can be set to zero, diffp, diff_onesided, lbound, ubound: identical to the user settings of this name, plabels: 1-dimensional cell-array of column-cell-arrays, each column with labels for all parameters; the first column contains the numerical indices of the parameters; the second and third columns, present for structure based parameter handling, see Parameter structures, contain the names of the parameters and the subindices of the parameters, see Non-scalar parameters, respectively. The default jacobian function will call the model function with the second argument set with fields f: as the f passed to the jacobian function, plabels: cell-array of 1x1 cell-arrays with the entries of the column-cell-arrays of plabels as passed to the jacobian function corresponding to current parameter, side: 0 for one-sided interval, 1 or 2, respectively, for the sides of a two-sided interval, and parallel: logical scalar indicating parallel computation of partial derivatives. This information can be useful if the model function can omit some computations depending on the currently computed partial derivative. 
 
@@ -914,7 +914,7 @@ else
   "\n\n\n Alles"
   settings.weights = options5.weights;
   paramn5 = [mu; beta; a3; da3; sig3; eta; nu; alpha; lcc; sig1; q; dan; k; const1; const2; g];
-  function result5 = result5fun(cno, mu, beta, a3, da3, sig3, u3, eta, nu, alpha, lcc, sig1, q, cH, cN, cO, cS, dan, k, const1, const2,useQ, b, useA, density, sampleThickness, transmission, absorptionCorrection, useP, polarizedBeam, polarizationDegree, useGradient, g, useCorrAutoColl, par_r, par_delta, par_l, radiation, wavelength, coh, inc, x, param5, yn, settings, errorCount = 1)
+  function result5 = result5fun(cno, mu, beta, a3, da3, sig3, u3, eta, nu, alpha, lcc, sig1, q, cH, cN, cO, cS, dan, k, const1, const2, useQ, b, useA, density, sampleThickness, transmission, absorptionCorrection, useP, polarizedBeam, polarizationDegree, useGradient, g, useCorrAutoColl, par_r, par_delta, par_l, radiation, wavelength, coh, inc, x, param5, yn, settings, errorCount = 1)
    maxerrorCount = 10;
     result5.covp = 100*eye(length(param5));
     try
@@ -922,27 +922,27 @@ else
     catch
       lasterror.message
       if errorCount < maxerrorCount
-        result5 = result5fun(cno, mu, beta, a3, da3, sig3, u3, eta, nu, alpha, lcc, sig1, q, cH, cN, cO, cS, dan, k, const1, const2,useQ, b, useA, density, sampleThickness, transmission, absorptionCorrection, useP, polarizedBeam, polarizationDegree, useGradient, g, useCorrAutoColl, par_r, par_delta, par_l, radiation, wavelength, coh, inc, x, param5, yn, settings, errorCount + 1);
+        result5 = result5fun(cno, mu, beta, a3, da3, sig3, u3, eta, nu, alpha, lcc, sig1, q, cH, cN, cO, cS, dan, k, const1, const2, useQ, b, useA, density, sampleThickness, transmission, absorptionCorrection, useP, polarizedBeam, polarizationDegree, useGradient, g, useCorrAutoColl, par_r, par_delta, par_l, radiation, wavelength, coh, inc, x, param5, yn, settings, errorCount + 1);
       endif
     end_try_catch
   endfunction
     
-  function [param5, f5, cvg5, outp5, result5] = fit5(fun5, paramn5, x, yn, options5, settings, cno, mu, beta, a3, da3, sig3, u3, eta, nu, alpha, lcc, sig1, q, cH, cN, cO, cS, dan, k, const1, const2,useQ, b, useA, density, sampleThickness, transmission, absorptionCorrection, useP, polarizedBeam, polarizationDegree, useGradient, g, useCorrAutoColl, par_r, par_delta, par_l, radiation, wavelength, coh, inc, errorCount = 1)
+  function [param5, f5, cvg5, outp5, result5] = fit5(fun5, paramn5, x, yn, options5, settings, cno, mu, beta, a3, da3, sig3, u3, eta, nu, alpha, lcc, sig1, q, cH, cN, cO, cS, dan, k, const1, const2, useQ, b, useA, density, sampleThickness, transmission, absorptionCorrection, useP, polarizedBeam, polarizationDegree, useGradient, g, useCorrAutoColl, par_r, par_delta, par_l, radiation, wavelength, coh, inc, errorCount = 1)
     maxerrorCount = 10;
     try
       [param5, f5, cvg5, outp5] = nonlin_curvefit(fun5, paramn5, x, yn, options5);
     catch
       lasterror.message
       if errorCount < maxerrorCount
-        [param5, f5, cvg5, outp5, result5] = fit5(fun5, paramn5, x, yn, options5, settings, cno, mu, beta, a3, da3, sig3, u3, eta, nu, alpha, lcc, sig1, q, cH, cN, cO, cS, dan, k, const1, const2,useQ, b, useA, density, sampleThickness, transmission, absorptionCorrection, useP, polarizedBeam, polarizationDegree, useGradient, g, useCorrAutoColl, par_r, par_delta, par_l, radiation, wavelength, coh, inc, errorCount + 1);
+        [param5, f5, cvg5, outp5, result5] = fit5(fun5, paramn5, x, yn, options5, settings, cno, mu, beta, a3, da3, sig3, u3, eta, nu, alpha, lcc, sig1, q, cH, cN, cO, cS, dan, k, const1, const2, useQ, b, useA, density, sampleThickness, transmission, absorptionCorrection, useP, polarizedBeam, polarizationDegree, useGradient, g, useCorrAutoColl, par_r, par_delta, par_l, radiation, wavelength, coh, inc, errorCount + 1);
       else
         error("Too many errors when refine")
       endif
     end_try_catch
-    result5 = result5fun(cno, mu, beta, a3, da3, sig3, u3, eta, nu, alpha, lcc, sig1, q, cH, cN, cO, cS, dan, k, const1, const2,useQ, b, useA, density, sampleThickness, transmission, absorptionCorrection, useP, polarizedBeam, polarizationDegree, useGradient, g, useCorrAutoColl, par_r, par_delta, par_l, radiation, wavelength, coh, inc, x, param5, yn, settings);
+    result5 = result5fun(cno, mu, beta, a3, da3, sig3, u3, eta, nu, alpha, lcc, sig1, q, cH, cN, cO, cS, dan, k, const1, const2, useQ, b, useA, density, sampleThickness, transmission, absorptionCorrection, useP, polarizedBeam, polarizationDegree, useGradient, g, useCorrAutoColl, par_r, par_delta, par_l, radiation, wavelength, coh, inc, x, param5, yn, settings);
   endfunction
 
-  [param5, f5, cvg5, outp5, result5] = fit5(fun5, paramn5, x, yn, options5, settings, cno, mu, beta, a3, da3, sig3, u3, eta, nu, alpha, lcc, sig1, q, cH, cN, cO, cS, dan, k, const1, const2,useQ, b, useA, density, sampleThickness, transmission, absorptionCorrection, useP, polarizedBeam, polarizationDegree, useGradient, g, useCorrAutoColl, par_r, par_delta, par_l, radiation, wavelength, coh, inc);
+  [param5, f5, cvg5, outp5, result5] = fit5(fun5, paramn5, x, yn, options5, settings, cno, mu, beta, a3, da3, sig3, u3, eta, nu, alpha, lcc, sig1, q, cH, cN, cO, cS, dan, k, const1, const2, useQ, b, useA, density, sampleThickness, transmission, absorptionCorrection, useP, polarizedBeam, polarizationDegree, useGradient, g, useCorrAutoColl, par_r, par_delta, par_l, radiation, wavelength, coh, inc);
   paramn5 = param5;
 
   mu     = param5(1)
@@ -1002,8 +1002,8 @@ else
   dy = ((yn-yFit)./yn)';
   dySumme = sum(dy)
 
-  x0 = [min(x);max(x)];
-  y0 = [0;0];
+  x0 = [min(x); max(x)];
+  y0 = [0; 0];
   yFitLog = log10(yFit);
   yFitLogPlot = log10(yFitPlot);
 
@@ -1011,8 +1011,8 @@ else
   dyLog = (ynLog-yFitLog)./ynLog;
   dyLogSumme = sum(dyLog)
 
-  x0 = [min(x);max(x)];
-  y0 = [0;0];
+  x0 = [min(x); max(x)];
+  y0 = [0; 0];
 
   if shouldPlot == true
     plot7 = figure(8);
