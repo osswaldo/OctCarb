@@ -17,8 +17,8 @@ lcc    = 1.412;
 sig1   = 0.1;
 q      = 0;
 dan    = 0;
-k      = 800;      # Step 2
-const1 = 1800;     # Step 2
+k      = 500;      # Step 2
+const1 = 1600;     # Step 2
 const2 = 0;
 
 #Switch for usage of gradient g and concentrations of impurities

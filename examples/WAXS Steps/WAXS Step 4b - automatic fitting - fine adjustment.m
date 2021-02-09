@@ -75,10 +75,10 @@ type = "twoTheta";                                 # Step 1
 
 #Octave must be restarted after changing one of the below liness
 #Skip n points at start
-nStart = 0;    # Step 4b
+nStart = 0;
 
 #Skip n points at the end
-nEnd = 0;      # Step 4b
+nEnd = 0;
 
 #Calculate only every n point
 nSkip = 1;     # Step 1     # Step 4b

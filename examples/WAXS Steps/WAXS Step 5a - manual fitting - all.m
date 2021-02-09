@@ -81,7 +81,7 @@ nStart = 0;
 nEnd = 0;
 
 #Calculate only every n point
-nSkip = 1;     # Step 1
+nSkip = 1;     # Step 1		# Step 5a
 
 #Shifting the raw data up/down
 nUp = 0;
