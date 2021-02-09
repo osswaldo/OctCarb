@@ -96,8 +96,8 @@ lb2 = [nu; 0.01; 0];
 ub2 = [nu; 2;    2];
 
 #q, dan, k, const1, const2, g
-lb3 = [q; dan; 0.0001; -100000; -100; -1];
-ub3 = [q; dan;  10000; +100000; +100; +1];
+lb3 = [q; dan; 0.0001; -100000; const2; -1];
+ub3 = [q; dan;  10000; +100000; const2; +1];
 
 #lcc
 lb4 = [1.2];
@@ -115,7 +115,7 @@ maxIter = 50;
 
 weight = "weight";
 
-useQ    = false; #Additional Deby-Waller-factor
+useQ    = false; #Additional Debye-Waller-factor
 b       = 0.002; #Factor
 
 useA                  = true;    #Absorption correction
@@ -909,9 +909,9 @@ else
 
   saveFiles("4-lcc", x, yFit4, yn, cno, mu, beta, a3, da3, sig3, u3, eta, nu, alpha, lcc, sig1, q, cH, cN, cO, cS, dan, k, const1, const2, useQ, b, useA, density, sampleThickness, transmission, absorptionCorrection, useP, polarizedBeam, polarizationDegree, useGradient, g, useCorrAutoColl, par_r, par_delta, par_l, radiation, wavelength, s, coh, inc, fitPath, id);
 
-  #Alles
+  #All
   fun5 = @(a, x) (fun(cno, a(1), a(2), a(3), a(4), a(5), u3, a(6), a(7), a(8), a(9), a(10), a(11), cH, cN, cO, cS, a(12), a(13), a(14), a(15), useQ, b, useA, density, sampleThickness, transmission, absorptionCorrection, useP, polarizedBeam, polarizationDegree, useGradient, a(16), useCorrAutoColl, par_r, par_delta, par_l, radiation, wavelength, x, coh, inc));
-  "\n\n\n Alles"
+  "\n\n\n All"
   settings.weights = options5.weights;
   paramn5 = [mu; beta; a3; da3; sig3; eta; nu; alpha; lcc; sig1; q; dan; k; const1; const2; g];
   function result5 = result5fun(cno, mu, beta, a3, da3, sig3, u3, eta, nu, alpha, lcc, sig1, q, cH, cN, cO, cS, dan, k, const1, const2, useQ, b, useA, density, sampleThickness, transmission, absorptionCorrection, useP, polarizedBeam, polarizationDegree, useGradient, g, useCorrAutoColl, par_r, par_delta, par_l, radiation, wavelength, coh, inc, x, param5, yn, settings, errorCount = 1)
@@ -981,7 +981,7 @@ else
     plot(x, yn, ".k;Data points;", "markersize", 10, x, yFit5, "r;Fit5;", "LineWidth", 3);
 	xlabel ("Scattering vector s / A^-^1");
 	ylabel ("Intensity I");
-	title ("0 - All");
+	title ("5 - All");
   endif
 
   output(1, 1) = cellstr("s");
@@ -1055,9 +1055,9 @@ else
     saveas(plot2, (strcat(fitPath, "/2_intralayer_", id, ".png")));
     saveas(plot3, (strcat(fitPath, "/3_normalisierung_", id, ".png")));
     saveas(plot4, (strcat(fitPath, "/4_lcc_", id, ".png")));
-    saveas(plot5, (strcat(fitPath, "/5_alles_", id, ".png")));
+    saveas(plot5, (strcat(fitPath, "/5_all_", id, ".png")));
     saveas(plot7, (strcat(fitPath, "/7_errorCount_", id, ".png")));
-    saveas(plot8, (strcat(fitPath, "/8_allesLog_", id, ".png")));
+    saveas(plot8, (strcat(fitPath, "/8_allLog_", id, ".png")));
     saveas(plot9, (strcat(fitPath, "/9_errorCountLog_", id, ".png")));
   endif
 
