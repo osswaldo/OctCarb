@@ -542,6 +542,8 @@ if shouldPlot == true
 	title ("0 - Start");
 endif
 
+copyfile(filename, strcat(fitPath, '/', filename));
+
 if plotOnly == true
   output(1, 1) = cellstr("s");
   output(1, 2) = cellstr("iObs(s)");
@@ -1045,9 +1047,7 @@ else
     rQuadratFit = rQuadratFit
   else
     rQuadratFit = 1/rQuadratFit
-  endif
-  
-  copyfile(filename, strcat(fitPath, '/', filename));
+endif
 
   if shouldPlot == true
     saveas(plot0, (strcat(fitPath, "/0_start_", id, ".png")));

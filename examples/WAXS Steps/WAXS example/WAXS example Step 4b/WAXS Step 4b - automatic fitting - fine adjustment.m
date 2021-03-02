@@ -542,6 +542,8 @@ if shouldPlot == true
 	title ("0 - Start");
 endif
 
+copyfile(filename, strcat(fitPath, '/', filename));
+
 if plotOnly == true
   output(1, 1) = cellstr("s");
   output(1, 2) = cellstr("iObs(s)");
@@ -981,7 +983,7 @@ else
     plot(x, yn, ".k;Data points;", "markersize", 10, x, yFit5, "r;Fit5;", "LineWidth", 3);
 	xlabel ("Scattering vector s / A^-^1");
 	ylabel ("Intensity I");
-	title ("0 - All");
+	title ("5 - All");
   endif
 
   output(1, 1) = cellstr("s");
@@ -1045,9 +1047,7 @@ else
     rQuadratFit = rQuadratFit
   else
     rQuadratFit = 1/rQuadratFit
-  endif
-  
-  copyfile(filename, strcat(fitPath, '/', filename));
+endif
 
   if shouldPlot == true
     saveas(plot0, (strcat(fitPath, "/0_start_", id, ".png")));
