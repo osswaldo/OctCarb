@@ -496,10 +496,20 @@ double Calculations::Iintra(double nu, double lm, double lcc, double sig1, doubl
 			return 0.;
 			break;
 	}*/
+
+    // Standard
 	double Jhk_sum = 0.;
 	for (int h = 1; h <= nu; ++h)
 		for (int k = 0; k <= h; ++k)
 			Jhk_sum += JhkXprefactor(nu, lm, lcc, sig1, h, k, q, s);
+
+    /*
+    // WANS Paper vergleich
+    double Jhk_sum = 0.;
+    for (int h = 1; h <= 7; ++h)
+        for (int k = 0; k <= h; ++k)
+            Jhk_sum += JhkXprefactor(nu, lm, lcc, sig1, h, k, q, s);
+    */
 	return ( 1 / n0S0(lcc) * Jhk_sum );
 }
 
@@ -559,7 +569,7 @@ double Calculations::Icoh(double cno, std::vector<csp> *csp, double cN, double c
 			double cC = 1 - cH - cN - cO - cS;
 			double cCordered = cC * (1-cno);
 
-			return	cCordered * (pow(fCperp(dan,s),2) * I_inter + pow(fCpara(s),2) * I_intra);
+            return cCordered * (pow(fCperp(dan,s),2) * I_inter + pow(fCpara(s),2) * I_intra);
 
 			/*
 			return ( ( (1-cno) *
@@ -591,9 +601,9 @@ double Calculations::Icoh(double cno, std::vector<csp> *csp, double cN, double c
 
 
 //I_obs - theoretical observed intensity
-double Calculations::iObs(bool useA, double density, double absroptionConstantCorrection, double sampleThickness, bool transmission, bool useGradient, double g, bool useCorrAutoColl, double par_r, double par_delta, double par_l, double const1, double const2, bool useQ, double b, double k, double cno, std::vector<csp> *csp, double cN, double cO, double cS, double cH, double dan, double s, Enumerations::radiationType radiationType, double wavelength, bool polarizationCorrection, bool polarizedBeam, double polarizationDegree, bool coh, bool inc) {
+double Calculations::iObs(bool useA, double density, double absorptionConstantCorrection, double sampleThickness, bool transmission, bool useGradient, double g, bool useCorrAutoColl, double par_r, double par_delta, double par_l, double const1, double const2, bool useQ, double b, double k, double cno, std::vector<csp> *csp, double cN, double cO, double cS, double cH, double dan, double s, Enumerations::radiationType radiationType, double wavelength, bool polarizationCorrection, bool polarizedBeam, double polarizationDegree, bool coh, bool inc) {
 	double theta = sToTheta(s, wavelength);
-	double factA = (useA ? A(theta, density, absroptionConstantCorrection, wavelength, radiationType, transmission, sampleThickness) : 1);
+    double factA = (useA ? A(theta, density, absorptionConstantCorrection, wavelength, radiationType, transmission, sampleThickness) : 1);
 	double factGradient = (useGradient ? T(g, s) : 1);
 	double factPolarization = (polarizationCorrection && radiationType == Enumerations::X_ray ? (PTheta_(theta, polarizedBeam, polarizationDegree)) : 1);
 
@@ -636,15 +646,18 @@ double Calculations::Ifit(bool useQ, double b, double cno, std::vector<csp> *csp
 double Calculations::Iinc(Enumerations::radiationType radiationType, double cno, double cN, double cO, double cS, double cH, bool useQ, double b, double s, double wavelength) {
 	switch(radiationType) {
 		case Enumerations::X_ray :{
-			double cC = 1 - cH - cN - cO - cS;
-			double cCdisordered = cC *(cno);
+            double cC = 1 - cH - cN - cO - cS;
+            double cCdisordered = cC *(cno);
+            //double cCordered = cC *(1-cno);
 
-			double IincC = IcomC(s) * (useQ ? Q(b,s,wavelength) : 1);
+            double comptenCorr = Recoil(s,wavelength) * Qabs(s,wavelength) * (useQ ? Q(b,s,wavelength) : 1);
 
-			double IincForeign = (cCdisordered * IincC + cH * IcomH(s) + cN * IcomN(s) + cO * IcomO(s) + cS * IcomS(s)) * Recoil(s,wavelength) * Qabs(s,wavelength);
+            double IincC = cC * IcomC(s) * comptenCorr;
+            double IincForeignCom = (cH * IcomH(s) + cN * IcomN(s) + cO * IcomO(s) + cS * IcomS(s)) * comptenCorr;
 
-			return	IincForeign +
-					pow(fCpara(s),2) * cCdisordered +
+            return	IincC +
+                    IincForeignCom +
+                    pow(fCpara(s),2) * cCdisordered +
 					pow(fH(s),2) * cH +
 					pow(fN(s),2) * cN +
 					pow(fO(s),2) * cO +
@@ -657,20 +670,20 @@ double Calculations::Iinc(Enumerations::radiationType radiationType, double cno,
 }
 
 //calculation of absorption factor A for transmission and reflection geometry. For transmission, a endless beamwidth can be used and and a infininte depth of penetration is assumed (as usual for neutron scattering). For X-ray diffraction using reflection geometry, the absorption is only non-constant for samples, which are thinner than the depth of penetration of X-rays in carbon. In general, this is only the case for thin films and not for powders.
-double Calculations::A(double theta, double density, double absroptionConstantCorrection, double wavelength, Enumerations::radiationType radiationType, bool transmission, double sampleThickness) {
+double Calculations::A(double theta, double density, double absorptionConstantCorrection, double wavelength, Enumerations::radiationType radiationType, bool transmission, double sampleThickness) {
 	double l = sampleThickness;
 	double mue_ab = 0;
 	if (radiationType == Enumerations::X_ray) {
-		mue_ab = pow(wavelength, -3.089) * pow(10, 1.081) * density * absroptionConstantCorrection;
+        mue_ab = pow(wavelength, -3.089) * pow(10, 1.081) * density * absorptionConstantCorrection;
 	} else {
 		double waveVector = 1/wavelength * 2 * M_PI;
 		double sigAbsInc = 0.001E-24;
-		double sigAbs = 4 * M_PI/waveVector * sigAbsInc * absroptionConstantCorrection;
+        double sigAbs = 4 * M_PI/waveVector * sigAbsInc * absorptionConstantCorrection;
 		double n = density * 6.02214076E23/12.011;
 		mue_ab = n * sigAbs;
 	}
 
-	mue_ab = mue_ab * absroptionConstantCorrection;
+    mue_ab = mue_ab * absorptionConstantCorrection;
 
 	if (transmission) {
 		return l/cos(theta)*exp(-l*mue_ab/cos(theta));

@@ -40,15 +40,15 @@ global shouldPlot = true;
 
 #Name of the series and id of the sample
 name = "Good fit";                             # Step 1
-global id = "Good fit 1";                      # All steps
+global id = "Good fit 1";                 # All steps
 #Filename and path the currently used file, must also contain iObs.oct. The path must be changed twice.
 #The '/' symbol must be used in the paths
 filename = "Good fit.m";                                         # All steps
-path = 'D:/OneDrive/Github/NGCs/examples/Good fit';             # Step 1
-cd 'D:/OneDrive/Github/NGCs/examples/Good fit';                  # Step 1
+path = 'D:/OneDrive/Uni/PhD/Paper Octave/Github/NGCs/examples/Good fit';                      # Step 1
+cd 'D:/OneDrive/Uni/PhD/Paper Octave/Github/NGCs/examples/Good fit';                          # Step 1
 
 #Measurement data file
-measFile = 'D:/OneDrive/Github/NGCs/examples/Good fit/Good fit example data.xy'; # Step 1
+measFile = 'D:/OneDrive/Uni/PhD/Paper Octave/Github/NGCs/examples/Good fit/Good fit example data.xy'; # Step 1
 
 #Corrections for Wide-Angle Neutron Scattering (WANS) experiments, only meaningful, if radation = 1 (means neutrons scattering)
 neutronCorrection = false;
@@ -1047,6 +1047,7 @@ else
     rQuadratFit = rQuadratFit
   else
     rQuadratFit = 1/rQuadratFit
+endif
   endif
 
   if shouldPlot == true
