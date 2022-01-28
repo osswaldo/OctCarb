@@ -380,26 +380,44 @@ double Calculations::shk(int h, int k, double lcc){
 	return (sqrt(pow(h,2) + pow(k,2) + h*k) * 2. / 3. / lcc);
 }
 
-double Calculations::g(double q, double lcc, int h, int k, double s){
-	if (q == 0.)
+double Calculations::g(double q, double lcc, int h, int k, double s) {
+    if (q == 0.) {
 		return 1;
-	else
-		if (s < shk(h, k, lcc))
-			return (sqrt(q) / atanh(sqrt(q))/(1. + q));
-		else
-			return ((1. + q) * sqrt(q) / atanh(sqrt(q)) / ( pow((1. - q),2) + 4. * q * pow(shk(h, k, lcc),2)/pow(s,2) ));
+    } else {
+        double qAbs = abs(q);
+        double ret = 0.0;
+        if (s < shk(h, k, lcc)) {
+            ret = (sqrt(qAbs) / atanh(sqrt(qAbs))/(1. + qAbs));
+        } else {
+            ret = ((1. + qAbs) * sqrt(qAbs) / atanh(sqrt(qAbs)) / ( pow((1. - qAbs),2) + 4. * qAbs * pow(shk(h, k, lcc),2)/pow(s,2) ));
+        }
+
+        if (q > 0) {
+            return ret;
+        } else {
+            return 1/ret;
+        }
+    }
 }
 
 double Calculations::g0(double q){
-	if (q == 0)
+    if (q == 0) {
 		return 1;
-	else
-		return ((1. + q) * sqrt(q) / atanh(sqrt(q))/ pow((1. - q),2));
+    } else {
+        double qAbs = abs(q);
+        double ret = ((1. + qAbs) * sqrt(qAbs) / atanh(sqrt(qAbs))/ pow((1. - qAbs),2));
+        if (q > 0) {
+            return ret;
+        } else {
+            return 1/ret;
+        }
+    }
 }
 
+//analytical expression for F without epsilon_1
 std::complex<double> Calculations::F(double m, double nu, double lm, double lcc, double sig1, int h, int k, double s){
 	double al = nu / lm;
-	double b = 2. * pow(M_PI, 2) * pow(shk(h, k, lcc),2) * pow(sig1,2) * 2./3. / lcc;
+    double b = 2. * pow(M_PI, 2) * pow(shk(h, k, lcc),2) * pow(sig1,2) * 2./3. / lcc;
 	std::complex<double> t (al+b, -2. * M_PI * s);
 	double a_hypgeo = ((1+m)/2);
 	double b_hypgeo = ((2+m)/2);
@@ -409,7 +427,12 @@ std::complex<double> Calculations::F(double m, double nu, double lm, double lcc,
 	return ( pow(al,m) * pow(t,-1-m) * (double)(exp(gammln(1+m))) * hypgeo2F1(a_hypgeo, b_hypgeo, c_hypgeo, z_hypgeo));
 }
 
-//analytical expression for J_hk without epsilon_ 1
+//analytical expression for F with epsilon_1
+std::complex<double> Calculations::F_eps1(double m, double nu, double lm, double lcc, double sig1, double eps1, int h, int k, double s){
+    return F(m, nu, lm, lcc, sig1, h, k, s);
+}
+
+//analytical expression for J_hk without epsilon_1
 double Calculations::Jhk(double nu, double lm, double lcc, double sig1, int h, int k, double q, double s){
 	int nu_round;
 	if ( nu - floor(nu) == 0.5 )
@@ -427,6 +450,25 @@ double Calculations::Jhk(double nu, double lm, double lcc, double sig1, int h, i
 	return t * sum.imag();
 }
 
+
+//analytical expression for J_hk with epsilon_1
+double Calculations::Jhk_eps1(double nu, double lm, double lcc, double sig1, double eps1, int h, int k, double q, double s){
+    int nu_round;
+    if ( nu - floor(nu) == 0.5 )
+        if (((int)(floor(nu))) % 2 == 0)
+            nu_round = floor(nu);
+        else
+            nu_round = ceil(nu);
+    else
+        nu_round = floor(nu + 0.5);
+    double t = g(q,lcc,h,k,s) * 1 / nu / s;
+    std::complex<double> sum (0.,0.);
+    for (int m = 0; m <= (nu_round  - 1); ++m){
+        sum += ( ( (nu_round - m) / (double)(exp(factln(m))) ) * F_eps1(m,nu,lm,lcc,sig1,eps1,h,k,s) );
+    }
+    return t * sum.imag();
+}
+
 int Calculations::Jhk_prefactor(int h, int k){
 	int multiplicity = 12;
 	if ( (h == 0) && (k == 0))
@@ -440,14 +482,21 @@ int Calculations::Jhk_prefactor(int h, int k){
 	return (multiplicity * structFactSquared);
 }
 
+//analytical expression for JhkXprefactor without epsilon_1
+double Calculations::JhkXprefactor_eps1(double nu, double lm, double lcc, double sig1, double eps1, int h, int k, double q, double s){
+    return (Jhk_prefactor (h, k) * Jhk_eps1(nu, lm, lcc, sig1, eps1, h, k, q, s)); // J_hk times prefactor
+}
+
+//analytical expression for JhkXprefactor with epsilon_1
 double Calculations::JhkXprefactor(double nu, double lm, double lcc, double sig1, int h, int k, double q, double s){
-	return (Jhk_prefactor (h, k) * Jhk(nu, lm, lcc, sig1, h, k, q, s)); // J_hk times prefactor
+    return (Jhk_prefactor (h, k) * Jhk(nu, lm, lcc, sig1, h, k, q, s)); // J_hk times prefactor
 }
 
 double Calculations::n0S0(double lcc){
 	return ( pow(3.,(3./2.)) * pow (lcc,2));
 }
 
+//analytical expression for Iintra without epsilon_1
 double Calculations::Iintra(double nu, double lm, double lcc, double sig1, double q, double s){
 	/*switch (radiationType){
 		case Enumerations::X_ray :{
@@ -499,9 +548,18 @@ double Calculations::Iintra(double nu, double lm, double lcc, double sig1, doubl
 
     // Standard
 	double Jhk_sum = 0.;
-	for (int h = 1; h <= nu; ++h)
-		for (int k = 0; k <= h; ++k)
-			Jhk_sum += JhkXprefactor(nu, lm, lcc, sig1, h, k, q, s);
+    double max = pow(nu+1, 2);
+    for (int h = 1; h <= nu; h++) {
+        for (int k = 0; k <= h; ++k) {
+            if ((pow(h, 2) + pow(k, 2) + h * k) < max) {
+                double nuTemp = nu;
+                if (nuTemp > 10) {
+                    nuTemp = 10;
+                }
+                Jhk_sum += JhkXprefactor(nuTemp, lm, lcc, sig1, h, k, q, s);
+            }
+        }
+    }
 
     /*
     // WANS Paper vergleich
@@ -513,6 +571,34 @@ double Calculations::Iintra(double nu, double lm, double lcc, double sig1, doubl
 	return ( 1 / n0S0(lcc) * Jhk_sum );
 }
 
+//analytical expression for Iintra with epsilon_1
+double Calculations::Iintra_eps1(double nu, double lm, double lcc, double sig1, double eps1, double q, double s){
+    // Standard
+    double Jhk_sum = 0.;
+    double max = pow(nu+1, 2);
+    for (int h = 1; h <= nu; h++) {
+        for (int k = 0; k <= h; ++k) {
+            if ((pow(h, 2) + pow(k, 2) + h * k) < max) {
+                if ((pow(h, 2) + pow(k, 2) + h * k) < max) {
+                    double nuTemp = nu;
+                    if (nuTemp > 10) {
+                        nuTemp = 10;
+                    }
+                    Jhk_sum += JhkXprefactor_eps1(nuTemp, lm, lcc, sig1, eps1, h, k, q, s);
+                }
+            }
+        }
+    }
+
+    /*
+    // WANS Paper vergleich
+    double Jhk_sum = 0.;
+    for (int h = 1; h <= 7; ++h)
+        for (int k = 0; k <= h; ++k)
+            Jhk_sum += JhkXprefactor(nu, lm, lcc, sig1, h, k, q, s);
+    */
+    return ( 1 / n0S0(lcc) * Jhk_sum );
+}
 
 //I_inter - scattering from the stacking of layers
 
@@ -559,10 +645,11 @@ double Calculations::Icoh(double cno, std::vector<csp> *csp, double cN, double c
 	double I_inter = 0.;
 	double I_intra = 0.;
 	int size = csp->size();
-	for (int i = 0; i < size; ++i){
-		I_inter += ( (csp->at(i).concn > 0.) ? ( csp->at(i).concn * Iinter(csp->at(i).mu, csp->at(i).Nm, csp->at(i).a3min, csp->at(i).da3, csp->at(i).sig3, csp->at(i).u3, csp->at(i).eta, csp->at(i).lcc, csp->at(i).q, s) ) : (0.) );
-		I_intra += ( (csp->at(i).concn > 0.) ? ( csp->at(i).concn * Iintra(csp->at(i).nu, csp->at(i).lm, csp->at(i).lcc, csp->at(i).sig1, csp->at(i).q, s) ) : (0.) );
-	}
+    for (int i = 0; i < size; ++i){
+        I_inter += ( (csp->at(i).concn > 0.) ? ( csp->at(i).concn * Iinter(csp->at(i).mu, csp->at(i).Nm, csp->at(i).a3min, csp->at(i).da3, csp->at(i).sig3, csp->at(i).u3, csp->at(i).eta, csp->at(i).lcc, csp->at(i).q, s) ) : (0.) );
+        //I_intra += ( (csp->at(i).concn > 0.) ? ( csp->at(i).concn * Iintra(csp->at(i).nu, csp->at(i).lm, csp->at(i).lcc, csp->at(i).sig1, csp->at(i).q, s) ) : (0.) );
+        I_intra += ( (csp->at(i).concn > 0.) ? ( csp->at(i).concn * Iintra_eps1(csp->at(i).nu, csp->at(i).lm, csp->at(i).lcc, csp->at(i).sig1, csp->at(i).eps1, csp->at(i).q, s) ) : (0.) );
+    }
 
 	switch (radiationType){
 		case Enumerations::X_ray :{

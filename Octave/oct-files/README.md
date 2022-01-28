@@ -44,7 +44,7 @@ To compile an *.oct* file, *Octave* must be installed first and the *mkoctfile* 
 2. To compile *iObs* to *iObs.oct*, just open the command line and execute the following commands (the paths may need to be adjusted):
 ```cmd
 cd C:\Octave\Octave-5.2.0\mingw64\bin
-mkoctfile -L..\lib\octave\5.2.0 -I..\include\octave-5.2.0\octave "<*path_to_iObsPDF*>\iObs.cpp"
+mkoctfile -L..\lib\octave\5.2.0 -I..\include\octave-5.2.0\octave "<*path_to_iObs*>\iObs.cpp"
 mkoctfile -L..\lib\octave\5.2.0 -I..\include\octave-5.2.0\octave "<*path_to_iObsPDF*>\iObsPDF.cpp"
 ```
 This generates an *iObs.oct* and an *iObsPDF.oct* file in the directory *C:\Octave\Octave-5.2.0\mingw64\bin\mkoctfile*.
@@ -67,4 +67,4 @@ mkoctfile -I/usr/local/bin/octave "<*path_to_iObsPDF*>/iObsPDF.cpp"
 ```
 This generates an *iObs.oct* and an *iObsPDF.oct* file in the current directory.
 
-Copyright (C) 2021 Oliver Osswald
+Copyright (C) 2022 Oliver Osswald

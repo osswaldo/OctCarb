@@ -100,15 +100,27 @@ public:
 	double g0(double q);
 	//std::complex<double> F(double m, double nu, double lm, double lcc, double sig1, int h, int k, double s);
 
+    //analytical expression for F without epsilon_1
 	std::complex<double> F(double m, double nu, double lm, double lcc, double sig1, int h, int k, double s);
 
-	//analytical expression for J_hk without epsilon_ 1
+    //analytical expression for F with epsilon_1
+    std::complex<double> F_eps1(double m, double nu, double lm, double lcc, double sig1, double eps1, int h, int k, double s);
+
+	//analytical expression for J_hk without epsilon_1
 	double Jhk(double nu, double lm, double lcc, double sig1, int h, int k, double q, double s);
 	double JhkXprefactor(double nu, double lm, double lcc, double sig1, int h, int k, double q, double s); // J_hk times prefactor
 	int Jhk_prefactor(int h, int k); //prefactor for J_hk
 
+    //analytical expression for J_hk with epsilon_1
+    double Jhk_eps1(double nu, double lm, double lcc, double sig1, double eps1, int h, int k, double q, double s);
+    double JhkXprefactor_eps1(double nu, double lm, double lcc, double sig1, double eps1, int h, int k, double q, double s); // J_hk times prefactor
+
 	double n0S0(double lcc);
+    
+    //analytical expression for Iintra with epsilon_1
 	double Iintra(double nu, double lm, double lcc, double sig1, double q, double s);
+    //analytical expression for Iintra with epsilon_1
+    double Iintra_eps1(double nu, double lm, double lcc, double sig1, double eps1, double q, double s);
 
 
 	//I_inter - scattering from the stacking of layers
@@ -122,9 +134,8 @@ public:
 	double Iinter(double mu, double Nm, double a3min, double da3, double sig3, double u3, double eta, double lcc, double q, double s);
 
 
-	//I_coh - coherent scattering, csp = coherent scattering parameters for I_intra and I_inter
+	//I_coh - coherent scattering, csp = coherent scattering parameters for I_intra and I_inter, concs = concentrations of corresponding phase
 	double Icoh(double cno, std::vector<csp> *csp, double cN, double cO, double cS, double cH, double dan, double s, Enumerations::radiationType radiationType);
-
 
 	//I_obs - theoretical observed intensity
 	double iObs(bool useA, double density, double absroptionConstantCorrection, double sampleThickness, bool transmission, bool useGradient, double g, bool useCorrAutoColl, double par_r, double par_delta, double par_l, double const1, double const2, bool useQ, double b, double k, double cno, std::vector<csp> *csp, double cN, double cO, double cS, double cH, double dan, double s, Enumerations::radiationType radiationType, double wavelength, bool polarizationCorrection, bool polarizedBeam, double polarizationDegree, bool coh, bool inc);
