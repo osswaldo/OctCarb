@@ -1046,7 +1046,7 @@ else
   y0 = [0; 0];
 
   if shouldPlot == true
-    plot7 = figure(8);
+    plot7 = figure(7);
     plot(x0, y0, "k;Zero line;", "LineWidth", 3, x, dy, ".r;errorCount;");
 	xlabel ("Scattering vector s / A^-^1");
 	ylabel ("Intensity I");

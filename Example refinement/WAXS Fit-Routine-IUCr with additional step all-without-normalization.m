@@ -1129,7 +1129,7 @@ else
   y0 = [0; 0];
 
   if shouldPlot == true
-    plot7 = figure(8);
+    plot7 = figure(7);
     plot(x0, y0, "k;Zero line;", "LineWidth", 3, x, dy, ".r;errorCount;");
 	xlabel ("Scattering vector s / A^-^1");
 	ylabel ("Intensity I");
@@ -1168,7 +1168,7 @@ endif
     saveas(plot3, (strcat(fitPath, "/3_normalisierung_", id, ".png")));
     saveas(plot4, (strcat(fitPath, "/4_lcc_", id, ".png")));
     saveas(plot5, (strcat(fitPath, "/5_all_", id, ".png")));
-    saveas(plot6, (strcat(fitPath, "/6_all_", id, ".png")));
+    saveas(plot6, (strcat(fitPath, "/6_all_without_normalization_", id, ".png")));
     saveas(plot7, (strcat(fitPath, "/7_errorCount_", id, ".png")));
     saveas(plot8, (strcat(fitPath, "/8_allLog_", id, ".png")));
     saveas(plot9, (strcat(fitPath, "/9_errorCountLog_", id, ".png")));
