@@ -1,4 +1,15 @@
 clear;
+clear;
+clear all;
+clear all;
+clear -all;
+clear -all;
+clear;
+clear;
+clear all;
+clear all;
+clear -all;
+clear -all;
 
 timeStart = time();
 
@@ -40,7 +51,7 @@ global shouldPlot = true;
 
 #Name of the series and id of the sample
 name = "name";
-global global id = "id";
+global id = "id";
 #Filename and path the currently used file, must also contain iObs.oct. The path must be changed twice.
 filename = "filename.m";
 #The '/' symbol must be used in the paths
@@ -113,7 +124,7 @@ maxIter = 50;
 #normal = 1 (every point has the same weight)
 #weight = 1/y (default; lower intensity has lower weight)
 
-weight = "weight";
+weight = "normal";
 
 useQ    = false; #Additional Debye-Waller-factor
 b       = 0.002; #Factor
@@ -310,7 +321,7 @@ else
 endif
 
 #OutputPath
-global global fitPath = strcat(path, "/", name, '/', id);
+global fitPath = strcat(path, "/", name, '/', id);
 
 #Make dir's
 mkdir(path, name);
@@ -328,6 +339,10 @@ paramn4 = [lcc];
 #Bounds for last step (order!)
 lb5 = [lb1; lb2(1); lb2(2); lb4; lb2(3); lb3];
 ub5 = [ub1; ub2(1); ub2(2); ub4; ub2(3); ub3];
+
+#Bounds for last step (order!)
+lb6 = [lb1; lb2(1); lb2(2); lb4; lb2(3)];
+ub6 = [ub1; ub2(1); ub2(2); ub4; ub2(3)];
 
 #Typical x-value (scattering vector s)
 typicalX = 1;
@@ -544,6 +559,16 @@ options5.ubound = ub5;
 options5.weights = wtWeight;
 options5.TypicalX = typicalX;
 options5.user_interaction = @outfun;
+
+options6.AutoScaling = autoscaling;
+options6.FunValCheck = funValCheck;
+options6.MaxIter = maxIter;
+options6.TolFun = tolFun;
+options6.lbound = lb6;
+options6.ubound = ub6;
+options6.weights = wtWeight;
+options6.TypicalX = typicalX;
+options6.user_interaction = @outfun;
 
 #Load optim package
 pkg load optim;

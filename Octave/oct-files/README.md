@@ -4,6 +4,9 @@ However, it is also possible to us an *iObsPDF.oct* file to calculate pair-distr
 The files can be either downloaded from this page or compiled by yourself using the follwing instructions.
 Please note that the files already compiled here may not always be up-to-date and will not work on all systems.
 
+## Example files
+The provided example oct files are compiled with Octave 5.2.0 (Windows versions also 6.3.0). They may also work with other Octave/operating system versions, but this has not been tested.
+
 ## Numerical recipes
 iObs uses parts of the Numerical Recipes (written in C), available under a commercial license. The machine-readable code of CarbX must therefore not be distributed. However, some public domain Numerical Recipes code is included in source code archive.
 
@@ -14,20 +17,26 @@ iObs uses parts of the Numerical Recipes (written in C), available under a comme
 * nrutil.c
 
 ### Missing for iObs
-* nr.h
+* bessj0.c
 * bsstep.c
 * factln.c
+* fpoly.c
 * gammln.c
+* gaulag.c
 * hypdrv.c
 * hypgeo.c
 * hypser.c
+* midinf.c
 * mmid.c
+* nr.h
 * odeint.c
 * pzextr.c
-* spine.c
+* qsimp.c
+* spline.c
 * splint.c
+* trapzd.c
 
-### Missing for iObsPDF
+### Missing for iObsPDF (additional)
 * fleg.c
 * pythag.c
 * ran1.c
@@ -43,11 +52,11 @@ To compile an *.oct* file, *Octave* must be installed first and the *mkoctfile* 
 1. Install* Octave* as described in https://github.com/osswaldo/ngcs/Octave/README.md
 2. To compile *iObs* to *iObs.oct*, just open the command line and execute the following commands (the paths may need to be adjusted):
 ```cmd
-cd C:\Octave\Octave-5.2.0\mingw64\bin
-mkoctfile -L..\lib\octave\5.2.0 -I..\include\octave-5.2.0\octave "<*path_to_iObs*>\iObs.cpp"
-mkoctfile -L..\lib\octave\5.2.0 -I..\include\octave-5.2.0\octave "<*path_to_iObsPDF*>\iObsPDF.cpp"
+cd C:\Octave\Octave-6.3.0\mingw64\bin
+mkoctfile -L..\lib\octave\6.3.0 -I..\include\octave-6.3.0\octave "<*path_to_iObs*>\iObs.cpp"
+mkoctfile -L..\lib\octave\6.3.0 -I..\include\octave-6.3.0\octave "<*path_to_iObsPDF*>\iObsPDF.cpp"
 ```
-This generates an *iObs.oct* and an *iObsPDF.oct* file in the directory *C:\Octave\Octave-5.2.0\mingw64\bin\mkoctfile*.
+This generates an *iObs.oct* and an *iObsPDF.oct* file in the directory *C:\Octave\Octave-6.3.0\mingw64\bin\mkoctfile*.
 
 ### Apple macOS
 1. Install Octave

@@ -1,4 +1,15 @@
 clear;
+clear;
+clear all;
+clear all;
+clear -all;
+clear -all;
+clear;
+clear;
+clear all;
+clear all;
+clear -all;
+clear -all;
 
 timeStart = time();
 
@@ -40,7 +51,7 @@ global shouldPlot = true;
 
 #Name of the series and id of the sample
 name = "name";
-global global id = "id";
+global id = "id";
 #Filename and path the currently used file, must also contain iObs.oct. The path must be changed twice.
 filename = "filename.m";
 #The '/' symbol must be used in the paths
@@ -113,7 +124,7 @@ maxIter = 50;
 #normal = 1 (every point has the same weight)
 #weight = 1/y (default; lower intensity has lower weight)
 
-weight = "weight";
+weight = "normal";
 
 useQ    = false; #Additional Debye-Waller-factor
 b       = 0.002; #Factor
@@ -310,7 +321,7 @@ else
 endif
 
 #OutputPath
-global global fitPath = strcat(path, "/", name, '/', id);
+global fitPath = strcat(path, "/", name, '/', id);
 
 #Make dir's
 mkdir(path, name);

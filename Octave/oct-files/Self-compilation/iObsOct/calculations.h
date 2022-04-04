@@ -96,15 +96,24 @@ public:
 	//I_intra - scattering from the layers
 
 	double shk(int h, int k, double lcc);
-	double g(double q, double lcc, int h, int k, double s);
+    double g(double q, double s_hk, double s);
 	double g0(double q);
 	//std::complex<double> F(double m, double nu, double lm, double lcc, double sig1, int h, int k, double s);
 
     //analytical expression for F without epsilon_1
-	std::complex<double> F(double m, double nu, double lm, double lcc, double sig1, int h, int k, double s);
+    std::complex<double> F(double m, double nu, double lm, double lcc, double sig1, double s_hk, double s);
 
-    //analytical expression for F with epsilon_1
-    std::complex<double> F_eps1(double m, double nu, double lm, double lcc, double sig1, double eps1, int h, int k, double s);
+    //numerical expression for F with epsilon_1
+    //double F_esp1_ohneInt(int m, double r, double nu, double lm, double lcc, double sig1, double eps1, int h, int k, double s);
+    //double F_eps1(double nu, double lm, double lcc, double sig1, double eps1, int h, int k, double s);
+    //double F_esp1_ohneInt(double r, double nu, double lm, double lcc, double sig1, double eps1, int h, int k, double s);
+
+    double Pl(double r, double nu, double lm, double s);
+    double Pd(double r, double lcc, double sig1, double eps1, double s_hk);
+    double PlPd(double r, double nu, double lm, double lcc, double sig1, double eps1, double s_hk, double s);
+    double Integrand(double r, double nu, double lm, double lcc, double sig1, double eps1, double shk, double s);
+    double Integrand_V2(double r, double nu, double lm, double lcc, double sig1, double eps1, double shk, double s);
+    //float Integrand_Ronly(float r);
 
 	//analytical expression for J_hk without epsilon_1
 	double Jhk(double nu, double lm, double lcc, double sig1, int h, int k, double q, double s);
@@ -113,6 +122,7 @@ public:
 
     //analytical expression for J_hk with epsilon_1
     double Jhk_eps1(double nu, double lm, double lcc, double sig1, double eps1, int h, int k, double q, double s);
+    double Jhk_eps1_V2(double nu, double lm, double lcc, double sig1, double eps1, int h, int k, double q, double s);
     double JhkXprefactor_eps1(double nu, double lm, double lcc, double sig1, double eps1, int h, int k, double q, double s); // J_hk times prefactor
 
 	double n0S0(double lcc);

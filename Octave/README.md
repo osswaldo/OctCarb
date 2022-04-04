@@ -276,6 +276,11 @@ brew update
 brew install octave
 ```
 
+3. To install a special Octave version (for example 6.3.0), download "Octave.rb" and run the following command (if you want to install another version, change the versions in "url" and "mirror" in "Octave.rb":
+```bash
+brew install --build-from-source ~/Downloads/Octave.rb
+```
+
 ##### Further tips
 In addition,* Octave* can also be compiled against gnuplot instead of qt. This result might perform better, so it is recommended to run also the following commands:
 0. Information: The entire process can take up to a few hours, but the actual working time in which YOU have to do something is only a few minutes.
