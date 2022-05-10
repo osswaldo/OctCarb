@@ -33,7 +33,7 @@ const1 = 0;
 const2 = 0;
 
 #Switch for usage of gradient g and concentrations of impurities
-useGradient = false;
+useGradient = true;
 g      = 0;
 
 cno = 0.0; #Concentration of disordered sp3 carbon
@@ -43,7 +43,7 @@ cO  = 0.0; #Concentration of oxygen
 cS  = 0.0; #Concentration of sulfur
 
 #Swtich for show a plot using the values above. Works only, if "shouldPlot = true".
-plotOnly = true;
+plotOnly = false;
 
 #Graphical output (has to be "false" if using octave-cli).  ('global' can be ignored, but must be present, it is necessary)
 #Global variables can only be resetted restarting Octave.

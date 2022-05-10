@@ -1,4 +1,15 @@
 clear;
+clear;
+clear all;
+clear all;
+clear -all;
+clear -all;
+clear;
+clear;
+clear all;
+clear all;
+clear -all;
+clear -all;
 
 timeStart = time();
 
@@ -22,7 +33,7 @@ const1 = 0;
 const2 = 0;
 
 #Switch for usage of gradient g and concentrations of impurities
-useGradient = false;
+useGradient = true;
 g      = 0;
 
 cno = 0.0; #Concentration of disordered sp3 carbon
@@ -32,7 +43,7 @@ cO  = 0.0; #Concentration of oxygen
 cS  = 0.0; #Concentration of sulfur
 
 #Swtich for show a plot using the values above. Works only, if "shouldPlot = true".
-plotOnly = true;
+plotOnly = false;
 
 #Graphical output (has to be "false" if using octave-cli).  ('global' can be ignored, but must be present, it is necessary)
 #Global variables can only be resetted restarting Octave.
@@ -329,6 +340,10 @@ paramn4 = [lcc];
 lb5 = [lb1; lb2(1); lb2(2); lb4; lb2(3); lb3];
 ub5 = [ub1; ub2(1); ub2(2); ub4; ub2(3); ub3];
 
+#Bounds for last step (order!)
+lb6 = [lb1; lb2(1); lb2(2); lb4; lb2(3)];
+ub6 = [ub1; ub2(1); ub2(2); ub4; ub2(3)];
+
 #Typical x-value (scattering vector s)
 typicalX = 1;
 
@@ -544,6 +559,16 @@ options5.ubound = ub5;
 options5.weights = wtWeight;
 options5.TypicalX = typicalX;
 options5.user_interaction = @outfun;
+
+options6.AutoScaling = autoscaling;
+options6.FunValCheck = funValCheck;
+options6.MaxIter = maxIter;
+options6.TolFun = tolFun;
+options6.lbound = lb6;
+options6.ubound = ub6;
+options6.weights = wtWeight;
+options6.TypicalX = typicalX;
+options6.user_interaction = @outfun;
 
 #Load optim package
 pkg load optim;
