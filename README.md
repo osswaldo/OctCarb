@@ -6,6 +6,18 @@ All content in this repository is manly based on the following publications:
 * Faber, K., Badaczewski, F., Oschatz, M., Mondin, G., Nickel, W., Kaskel, S., Smarsly, B. M. (2014), In-Depth Investigation of the Carbon Microstructure of Silicon Carbide-Derived Carbons by Wide-Angle X-ray Scattering, J. Phys. Chem. C., 118, 29, 15705-15715, [doi:10.1021/jp502832x](https://doi.org/10.1021/jp502832x)
 * Pfaff, T., Simmermacher, M. & Smarsly, B. M. (2018), *CarbX*: a program for the evaluation of wide-angle X-ray scattering data of non-graphitic carbons, J. Appl. Cryst., 51, 219-229, [doi:10.1107/S1600576718000195](https://doi.org/10.1107/S1600576718000195)
 
+# Quick start Guide:
+1. Download Octave 6.3.0 (https://www.gnu.org/software/octave/download)
+2. Download a matching oct file (https://github.com/osswaldo/NGCs/tree/master/Octave/oct-files/iObsOct). Pay attention to the operating system and the octave version (in Windows also 32 and 64 bit)
+3. Download Fit routine (https://github.com/osswaldo/NGCs/tree/master/Octave)
+4. Rename fitting routine to sample name
+5. Copy the oct file and the fit routine to the same(!) folder (important!)
+6. Open the fit routine and adjust lines 52 - 62
+7. Possibly adjust the wavelength and X-axis of the measurement data (lines 70 - 85)
+8. Apply correction parameters if necessary (132 - 145)
+9. Start automatic fit (yellow arrow in the cog wheel in the top line)
+10. Edit the result manually if necessary
+
 # Where is what to find
 This repository contains instruction videos, installation tutorials als examples refinement for the analysis of wide-angle X-ray/neutron (WAXS/WANS) scattering data of non-graphitic carbons (NGCs) using the Ruland & Smarsly (2002) algorithm.
 
