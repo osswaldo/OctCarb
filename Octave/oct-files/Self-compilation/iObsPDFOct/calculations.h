@@ -96,19 +96,41 @@ public:
 	//I_intra - scattering from the layers
 
 	double shk(int h, int k, double lcc);
-	double g(double q, double lcc, int h, int k, double s);
+    double g(double q, double s_hk, double s);
 	double g0(double q);
 	//std::complex<double> F(double m, double nu, double lm, double lcc, double sig1, int h, int k, double s);
 
-	std::complex<double> F(double m, double nu, double lm, double lcc, double sig1, int h, int k, double s);
+    //analytical expression for F without epsilon_1
+    std::complex<double> F(double m, double nu, double lm, double lcc, double sig1, double s_hk, double s);
 
-	//analytical expression for J_hk without epsilon_ 1
+    //numerical expression for F with epsilon_1
+    //double F_esp1_ohneInt(int m, double r, double nu, double lm, double lcc, double sig1, double eps1, int h, int k, double s);
+    //double F_eps1(double nu, double lm, double lcc, double sig1, double eps1, int h, int k, double s);
+    //double F_esp1_ohneInt(double r, double nu, double lm, double lcc, double sig1, double eps1, int h, int k, double s);
+
+    double Pl(double r, double nu, double lm, double s);
+    double Pd(double r, double lcc, double sig1, double eps1, double s_hk);
+    double PlPd(double r, double nu, double lm, double lcc, double sig1, double eps1, double s_hk, double s);
+    double Integrand(double r, double nu, double lm, double lcc, double sig1, double eps1, double shk, double s);
+    double Integrand_V2(double r, double nu, double lm, double lcc, double sig1, double eps1, double shk, double s);
+    //float Integrand_Ronly(float r);
+
+	//analytical expression for J_hk without epsilon_1
 	double Jhk(double nu, double lm, double lcc, double sig1, int h, int k, double q, double s);
 	double JhkXprefactor(double nu, double lm, double lcc, double sig1, int h, int k, double q, double s); // J_hk times prefactor
 	int Jhk_prefactor(int h, int k); //prefactor for J_hk
 
+    //analytical expression for J_hk with epsilon_1
+    double Jhk_eps1(double nu, double lm, double lcc, double sig1, double eps1, int h, int k, double q, double s);
+    double Jhk_eps1_V2(double nu, double lm, double lcc, double sig1, double eps1, int h, int k, double q, double s);
+    double JhkXprefactor_eps1(double nu, double lm, double lcc, double sig1, double eps1, int h, int k, double q, double s); // J_hk times prefactor
+
 	double n0S0(double lcc);
+    
+    //analytical expression for Iintra with epsilon_1
 	double Iintra(double nu, double lm, double lcc, double sig1, double q, double s);
+    //analytical expression for Iintra with epsilon_1
+    double Iintra_eps1(double nu, double lm, double lcc, double sig1, double eps1, double q, double s);
 
 
 	//I_inter - scattering from the stacking of layers
@@ -122,9 +144,8 @@ public:
 	double Iinter(double mu, double Nm, double a3min, double da3, double sig3, double u3, double eta, double lcc, double q, double s);
 
 
-	//I_coh - coherent scattering, csp = coherent scattering parameters for I_intra and I_inter
+	//I_coh - coherent scattering, csp = coherent scattering parameters for I_intra and I_inter, concs = concentrations of corresponding phase
 	double Icoh(double cno, std::vector<csp> *csp, double cN, double cO, double cS, double cH, double dan, double s, Enumerations::radiationType radiationType);
-
 
 	//I_obs - theoretical observed intensity
 	double iObs(bool useA, double density, double absroptionConstantCorrection, double sampleThickness, bool transmission, bool useGradient, double g, bool useCorrAutoColl, double par_r, double par_delta, double par_l, double const1, double const2, bool useQ, double b, double k, double cno, std::vector<csp> *csp, double cN, double cO, double cS, double cH, double dan, double s, Enumerations::radiationType radiationType, double wavelength, bool polarizationCorrection, bool polarizedBeam, double polarizationDegree, bool coh, bool inc);

@@ -1,4 +1,15 @@
 clear;
+clear;
+clear all;
+clear all;
+clear -all;
+clear -all;
+clear;
+clear;
+clear all;
+clear all;
+clear -all;
+clear -all;
 
 timeStart = time();
 
@@ -22,7 +33,7 @@ const1 = 0;
 const2 = 0;
 
 #Switch for usage of gradient g and concentrations of impurities
-useGradient = false;
+useGradient = true;
 g      = 0;
 
 cno = 0.0; #Concentration of disordered sp3 carbon
@@ -32,7 +43,7 @@ cO  = 0.0; #Concentration of oxygen
 cS  = 0.0; #Concentration of sulfur
 
 #Swtich for show a plot using the values above. Works only, if "shouldPlot = true".
-plotOnly = true;
+plotOnly = false;
 
 #Graphical output (has to be "false" if using octave-cli).  ('global' can be ignored, but must be present, it is necessary)
 #Global variables can only be resetted restarting Octave.
@@ -96,15 +107,15 @@ lb2 = [nu; 0.01; 0];
 ub2 = [nu; 2;    2];
 
 #q, dan, k, const1, const2, g
-lb3 = [q; dan; 0.0001; -100000; const2; -1];
-ub3 = [q; dan;  10000; +100000; const2; +1];
+lb3 = [q; dan; 0.0001; -100000; -100000; -1];
+ub3 = [q; dan;  10000; +100000; +100000; +1];
 
 #lcc
 lb4 = [1.2];
 ub4 = [1.8];
 
 #Function tolerance
-tolFun = 1e-10;
+tolFun = 1e-1000;
 
 #Maximal iterations per fit step
 maxIter = 50;
@@ -113,7 +124,7 @@ maxIter = 50;
 #normal = 1 (every point has the same weight)
 #weight = 1/y (default; lower intensity has lower weight)
 
-weight = "weight";
+weight = "normal";
 
 useQ    = false; #Additional Debye-Waller-factor
 b       = 0.002; #Factor
@@ -162,11 +173,9 @@ switch (type)
   case "thetaRad"
     x = 2/wavelength * sin(x);
   case "twoTheta"
-    x = 2/1.5418 * sin(x/2*pi/180);
-  case "twoTheta"
-    x = 2/1.5418 * sin(x/2*pi/180);
+    x = 2/wavelength * sin(x/2*pi/180);
   case "twoThetaRad"
-    x = 2/1.5418 * sin(x/2);
+    x = 2/wavelength * sin(x/2);
   case "scatS"
     x = x;
   case "scatQ"
@@ -263,7 +272,7 @@ function SofQ = lorgaunCorrection(x, y, minX = 0, maxX = 100)
   #options.AutoScaling = autoscaling;
   #options.FunValCheck = funValCheck;
   options.MaxIter = 50;
-  options.TolFun = 1e-100000;
+  options.TolFun = 1e-1000;
   
   #Normalization k, width w, ration eta
   options.lbound = [0.01; 0.1; 0];
@@ -301,16 +310,18 @@ s = x;
 global ynglobal = yn;
 
 wtNormal = ones(size(yn));
-for i=1:length(yn)
-	if weight == "normal"
-		wtWeight(i) = wtNormal;
-	else
-		wtWeight(i) = 1/(yn(i)+10);
-	endif
-endfor
+
+if weight == "normal"
+  wtWeight = wtNormal;
+else
+  for i=1:length(yn)
+    wtWeight(i) = 1/(yn(i)+10);
+	  
+  endfor
+endif
 
 #OutputPath
-fitPath = strcat(path, "/", name, '/', id);
+global fitPath = strcat(path, "/", name, '/', id);
 
 #Make dir's
 mkdir(path, name);
@@ -351,6 +362,30 @@ function [stop, info] = outfun(p, optimValues, state)
 	ylabel ("Intensity I");
 	title ("Current refinement step");
   endif
+
+  clear output;
+  
+  output(1, 1) = cellstr("results");
+  for i=1:length(p)
+    output(i+1, 1) = p(i);
+  endfor
+  
+  output(1, 3) = cellstr("q");
+  output(1, 4) = cellstr("I(q)");
+  output(1, 5) = cellstr("Fit");
+  
+  for i=1:length(x)
+    output(i+1, 3) = x(i);
+    output(i+1, 4) = observations(i);
+    output(i+1, 5) = y(i);
+  endfor
+  
+  global fitPath;
+  global id;
+    
+  path = strcat(fitPath, "/output_", id, "_", mat2str(localtime(time).year+1900), "-", mat2str(localtime(time).mon+1), "-", mat2str(localtime(time).mday), "_", mat2str(localtime(time).hour), "-", mat2str(localtime(time).min), "-", mat2str(localtime(time).sec), ".csv");
+  
+  cell2csv(path, output, ";");
 endfunction
 
 function saveFiles(name, x, y, observations, cno, mu, beta, a3, da3, sig3, u3, eta, nu, alpha, lcc, sig1, q, cH, cN, cO, cS, dan, k, const1, const2, useQ, b, useA, density, sampleThickness, transmission, absorptionCorrection, useP, polarizedBeam, polarizationDegree, useGradient, g, useCorrAutoColl, par_r, par_delta, par_l, radiation, wavelength, s, coh, inc, fitPath, id) 
@@ -517,7 +552,7 @@ options5.MaxIter = maxIter;
 options5.TolFun = tolFun;
 options5.lbound = lb5;
 options5.ubound = ub5;
-options5.weights = wtNormal;
+options5.weights = wtWeight;
 options5.TypicalX = typicalX;
 options5.user_interaction = @outfun;
 
@@ -649,6 +684,7 @@ else
 
   saveFiles("3-normalization", x, yFit3, yn, cno, mu, beta, a3, da3, sig3, u3, eta, nu, alpha, lcc, sig1, q, cH, cN, cO, cS, dan, k, const1, const2, useQ, b, useA, density, sampleThickness, transmission, absorptionCorrection, useP, polarizedBeam, polarizationDegree, useGradient, g, useCorrAutoColl, par_r, par_delta, par_l, radiation, wavelength, s, coh, inc, fitPath, id);
 
+
   #Interlayer
   fun1 = @(a, x) (fun(cno, a(1), a(2), a(3), a(4), a(5), u3, a(6), nu, alpha, lcc, sig1, q, cH, cN, cO, cS, dan, k, const1, const2, useQ, b, useA, density, sampleThickness, transmission, absorptionCorrection, useP, polarizedBeam, polarizationDegree, useGradient, g, useCorrAutoColl, par_r, par_delta, par_l, radiation, wavelength, x, coh, inc));
   "\n\n\n Interlayer"
@@ -724,6 +760,7 @@ else
 
   saveFiles("1-interlayer", x, yFit1, yn, cno, mu, beta, a3, da3, sig3, u3, eta, nu, alpha, lcc, sig1, q, cH, cN, cO, cS, dan, k, const1, const2, useQ, b, useA, density, sampleThickness, transmission, absorptionCorrection, useP, polarizedBeam, polarizationDegree, useGradient, g, useCorrAutoColl, par_r, par_delta, par_l, radiation, wavelength, s, coh, inc, fitPath, id);
 
+
   #Intralayer
   fun2 = @(a, x) (fun(cno, mu, beta, a3, da3, sig3, u3, eta, a(1), a(2), lcc, a(3), q, cH, cN, cO, cS, dan, k, const1, const2, useQ, b, useA, density, sampleThickness, transmission, absorptionCorrection, useP, polarizedBeam, polarizationDegree, useGradient, g, useCorrAutoColl, par_r, par_delta, par_l, radiation, wavelength, x, coh, inc));
   "\n\n\n Intralayer"
@@ -796,6 +833,7 @@ else
 
   saveFiles("2-intralayer", x, yFit2, yn, cno, mu, beta, a3, da3, sig3, u3, eta, nu, alpha, lcc, sig1, q, cH, cN, cO, cS, dan, k, const1, const2, useQ, b, useA, density, sampleThickness, transmission, absorptionCorrection, useP, polarizedBeam, polarizationDegree, useGradient, g, useCorrAutoColl, par_r, par_delta, par_l, radiation, wavelength, s, coh, inc, fitPath, id);
 
+
   #Normalisierung
   "\n\n\n Normalization"
   [param3, f3, cvg3, outp3, result3] = fit3(fun3, paramn3, x, yn, options3, settings, cno, mu, beta, a3, da3, sig3, u3, eta, nu, alpha, lcc, sig1, q, cH, cN, cO, cS, dan, k, const1, const2, useQ, b, useA, density, sampleThickness, transmission, absorptionCorrection, useP, polarizedBeam, polarizationDegree, useGradient, g, useCorrAutoColl, par_r, par_delta, par_l, radiation, wavelength, s, coh, inc, fitPath, id);
@@ -840,6 +878,7 @@ else
   cell2csv(strcat(fitPath, "/output_", id, "_", "3-normalization", ".csv"), output, ";");
 
   saveFiles("3-normalization", x, yFit3, yn, cno, mu, beta, a3, da3, sig3, u3, eta, nu, alpha, lcc, sig1, q, cH, cN, cO, cS, dan, k, const1, const2, useQ, b, useA, density, sampleThickness, transmission, absorptionCorrection, useP, polarizedBeam, polarizationDegree, useGradient, g, useCorrAutoColl, par_r, par_delta, par_l, radiation, wavelength, s, coh, inc, fitPath, id);
+
 
   #lcc
   fun4 = @(a, x) (fun(cno, mu, beta, a3, da3, sig3, u3, eta, nu, alpha, a(1), sig1, q, cH, cN, cO, cS, dan, k, const1, const2, useQ, b, useA, density, sampleThickness, transmission, absorptionCorrection, useP, polarizedBeam, polarizationDegree, useGradient, g, useCorrAutoColl, par_r, par_delta, par_l, radiation, wavelength, x, coh, inc));
@@ -910,6 +949,7 @@ else
   cell2csv(strcat(fitPath, "/output_", id, "_", "4-lcc", ".csv"), output, ";");
 
   saveFiles("4-lcc", x, yFit4, yn, cno, mu, beta, a3, da3, sig3, u3, eta, nu, alpha, lcc, sig1, q, cH, cN, cO, cS, dan, k, const1, const2, useQ, b, useA, density, sampleThickness, transmission, absorptionCorrection, useP, polarizedBeam, polarizationDegree, useGradient, g, useCorrAutoColl, par_r, par_delta, par_l, radiation, wavelength, s, coh, inc, fitPath, id);
+
 
   #All
   fun5 = @(a, x) (fun(cno, a(1), a(2), a(3), a(4), a(5), u3, a(6), a(7), a(8), a(9), a(10), a(11), cH, cN, cO, cS, a(12), a(13), a(14), a(15), useQ, b, useA, density, sampleThickness, transmission, absorptionCorrection, useP, polarizedBeam, polarizationDegree, useGradient, a(16), useCorrAutoColl, par_r, par_delta, par_l, radiation, wavelength, x, coh, inc));
@@ -1017,7 +1057,7 @@ else
   y0 = [0; 0];
 
   if shouldPlot == true
-    plot7 = figure(8);
+    plot7 = figure(7);
     plot(x0, y0, "k;Zero line;", "LineWidth", 3, x, dy, ".r;errorCount;");
 	xlabel ("Scattering vector s / A^-^1");
 	ylabel ("Intensity I");
