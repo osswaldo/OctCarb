@@ -1,13 +1,16 @@
 # Octave
-In this section, an instruction for instll *Octave* under Windows, macOS and Linux. In addition, a an example script for the refinement of measured WAXS/WANS data using the model of Ruland and Smarsly (2002).
+Note: *OctCarb*.m means *Fit-routine*.m
+
+In this section, an instruction for instll *Octave* under Windows, macOS and Linux. In addition, a an example script for *Octave* (*OctCarb*) for the refinement of measured WAXS/WANS data using the model of Ruland and Smarsly (2002).
 
 All content in this repository is manly based on the following publications:
 * Ruland, W. and Smarsly, B. M. (2002), X-ray scattering of non-graphitic carbon: an improved method of evaluation. J. Appl. Cryst., 35, 624-633, [doi:10.1107/S0021889802011007](https://doi.org/10.1107/S0021889802011007)
 * Faber, K., Badaczewski, F., Oschatz, M., Mondin, G., Nickel, W., Kaskel, S., Smarsly, B. M. (2014), In-Depth Investigation of the Carbon Microstructure of Silicon Carbide-Derived Carbons by Wide-Angle X-ray Scattering, J. Phys. Chem. C., 118, 29, 15705-15715, [doi:10.1021/jp502832x](https://doi.org/10.1021/jp502832x)
 * Pfaff, T., Simmermacher, M. & Smarsly, B. M. (2018), *CarbX*: a program for the evaluation of wide-angle X-ray scattering data of non-graphitic carbons, J. Appl. Cryst., 51, 219-229, [doi:10.1107/S1600576718000195](https://doi.org/10.1107/S1600576718000195)
+* Osswald, O., Smarsly, B. M. (2022), J. Appl. Cryst., in preparation
 
 ## Fit-routine.m
-The file *Fit-routine.m* contains an *Octave*-script for the refinement of measured WAXS/WANS data using the model of Ruland and Smarsly (2002). The input parameters are descriped in the file itself and in https://github.com/osswaldo/ngcs/README.md.
+The file *Fit-routine.m* contains an *Octave*-script (*OctCarb*) for the refinement of measured WAXS/WANS data using the model of Ruland and Smarsly (2002). The input parameters are descriped in the file itself and in https://github.com/osswaldo/ngcs/README.md.
 
 ### Output of *Fit-routine.m*
 During the whole refinement, *Octave* shows a plot with the actual state of refinement (if acivated).
@@ -25,7 +28,7 @@ In addition to the informative outputs such as the start and end time, the curre
 ##### Refined values and matrices
 The refined parameters and their values will be output after every refinement step by their name. The corresponding matrix also contains the values (1st column) and the error of it (2nd column, 1-sigma neighborhood of normal distribution). The 3rd and 4th columns contains the 2-sigma and 3-sigma neighborhoods of the normal distributions, respectiveley). An 1-sigma neighborhood of *10* means, that the error could not be calculated.
 
-## General in- and Output parameters for the refinement-script
+## General in- and Output parameters for the refinement-script (*OctCarb*)
 In general, the input parameters for *iObs*, *iObsPDF* and the associated *.oct* files are the same. The only difference between *iObs* and *iObsPDF* is that *iObsPDF* requires some additional parameters.
 Further information about all parameters can be found in the pulblications on top.
 

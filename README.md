@@ -1,10 +1,11 @@
-# NGCs
-Non-graphitic carbons (NGCs) are an important class of material used in acadameical research, industrial development and commercial applications. In the most of the cases, the microstructure is directly related to the macroscopical physical properties such as the high electric conductivity or chemical resitance. Using wide-angle X-ray/neutron scattering (WAXS/WANS) data or the resulting pair-distribution-function (PDF), the microstructure can be determined by using the model of Ruland & Smarsly (2002). The PDF analysis is still in progress and not maintained.
+# Purpose of the software
+*OctCarb* is a script for ***Oct**ave* that can be used to analyze and evaluate scattering data of non-graphitic **carb**ons. Non-graphitic carbons (NGCs) are an important class of material used in acadameical research, industrial development and commercial applications. In the most of the cases, the microstructure is directly related to the macroscopical physical properties such as the high electric conductivity or chemical resitance. Using wide-angle X-ray/neutron scattering (WAXS/WANS) data or the resulting pair-distribution-function (PDF), the microstructure can be determined by using the model of Ruland & Smarsly (2002). The PDF analysis is still in progress and not maintained.
 
 All content in this repository is manly based on the following publications:
-* Ruland, W. and Smarsly, B. M. (2002), X-ray scattering of non-graphitic carbon: an improved method of evaluation. J. Appl. Cryst., 35, 624-633, [doi:10.1107/S0021889802011007](https://doi.org/10.1107/S0021889802011007)
-* Faber, K., Badaczewski, F., Oschatz, M., Mondin, G., Nickel, W., Kaskel, S., Smarsly, B. M. (2014), In-Depth Investigation of the Carbon Microstructure of Silicon Carbide-Derived Carbons by Wide-Angle X-ray Scattering, J. Phys. Chem. C., 118, 29, 15705-15715, [doi:10.1021/jp502832x](https://doi.org/10.1021/jp502832x)
-* Pfaff, T., Simmermacher, M. & Smarsly, B. M. (2018), *CarbX*: a program for the evaluation of wide-angle X-ray scattering data of non-graphitic carbons, J. Appl. Cryst., 51, 219-229, [doi:10.1107/S1600576718000195](https://doi.org/10.1107/S1600576718000195)
+* Ruland, W. and Smarsly, B. M. (2002), X-ray scattering of non-graphitic carbon: an improved method of evaluation. J. Appl. Cryst., 35, 624-633, [doi:10.1107/S0021889802011007      ](https://doi.org/10.1107/S0021889802011007)      
+* Faber, K., Badaczewski, F., Oschatz, M., Mondin, G., Nickel, W., Kaskel, S., Smarsly, B. M. (2014), In-Depth Investigation of the Carbon Microstructure of Silicon Carbide-Derived Carbons by Wide-Angle X-ray Scattering, J. Phys. Chem. C., 118, 29, 15705-15715, [doi:10.1021/jp502832x      ](https://doi.org/10.1021/jp502832x)      
+* Pfaff, T., Simmermacher, M. & Smarsly, B. M. (2018), *CarbX*: a program for the evaluation of wide-angle X-ray scattering data of non-graphitic carbons, J. Appl. Cryst., 51, 219-229, [doi:10.1107/S1600576718000195      ](https://doi.org/10.1107/S1600576718000195)      
+* Osswald, O., Smarsly, B. M. (2022), J. Appl. Cryst., in preparation
 
 # Quick start Guide:
 1. Download Octave 6.3.0 (https://www.gnu.org/software/octave/download)
