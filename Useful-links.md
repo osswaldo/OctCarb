@@ -1,5 +1,5 @@
 Actual version of this file:
-https://github.com/osswaldo/NGCs/tree/master/Useful-links.txt
+https://github.com/osswaldo/NGCs/tree/master/Useful-links.md
 
 Publication:				
 
