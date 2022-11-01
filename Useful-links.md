@@ -26,5 +26,4 @@
 |                             |                                                                                        |
 | Instruction videos          | https://github.com/osswaldo/NGCs/tree/master/Instruction%20Videos                      |
 | Deutsch/German              | https://www.youtube.com/playlist?list=PLTlnYDX5g1FwaOQkLXTxrpvHW9CRUwBrk               |
-| Englih                      | https://www.youtube.com/playlist?list=PLTlnYDX5g1FylWfH8cSM_ZQUQpn3dSp6M               |
-|                             |                                                                                        |
+| English                      | https://www.youtube.com/playlist?list=PLTlnYDX5g1FylWfH8cSM_ZQUQpn3dSp6M               |
