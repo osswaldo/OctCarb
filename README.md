@@ -8,16 +8,7 @@ All content in this repository is manly based on the following publications:
 * Osswald, O., Smarsly, B. M. (2022), J. Appl. Cryst., in preparation
 
 # Quick start Guide:
-1. Download Octave 6.3.0 (https://www.gnu.org/software/octave/download)
-2. Download a matching oct file (https://github.com/osswaldo/NGCs/tree/master/Octave/oct-files/iObsOct). Pay attention to the operating system and the octave version (in Windows also 32 and 64 bit)
-3. Download Fit routine (https://github.com/osswaldo/NGCs/tree/master/Octave)
-4. Rename fitting routine to sample name
-5. Copy the oct file and the fit routine to the same(!) folder (important!)
-6. Open the fit routine and adjust lines 52 - 62
-7. Possibly adjust the wavelength and X-axis of the measurement data (lines 70 - 85)
-8. Apply correction parameters if necessary (132 - 145)
-9. Start automatic fit (yellow arrow in the cog wheel in the top line)
-10. Edit the result manually if necessary
+See https://github.com/osswaldo/NGCs/blob/master/Qick-Start-Guide.md
 
 # Where is what to find
 This repository contains instruction videos, installation tutorials als examples refinement for the analysis of wide-angle X-ray/neutron (WAXS/WANS) scattering data of non-graphitic carbons (NGCs) using the Ruland & Smarsly (2002) algorithm.
@@ -37,5 +28,8 @@ As the name says, some instruction videos for the installation of *Octave*, fitt
 ## *Octave*
 The directory *Octave* contains instructions for installing *GNU Octave* on Windows, macOS and Linux. In addition, a refinment script for get the microstructure date of non-graphitic carbons (NGCs) from wide-angle X-ray/neutron (WAXS/WANS) scattering data using the Ruland & Smarsly (2002) algorithm. Also, an instruction for compiling the needed *iObs.oct* file as well as some already compiled *iObs.oct* files are also provided, which can be used to call *iObs* from Octave. For optimal functionality, the file should be renamed to *iObs.oct* after downloading/compiling.
 If you never worked with* Octave* so far, it is highly recommended to take a look on an instruction video. Due to the high distribution and availability of *Octave*, there are a lot of instructions videos available via the internet, e.g. under https://www.youtube.com/watch?v=sHGqwF2s-tM. For this reason, there are no further basic instruction into *Octave* in this work.
+
+##Useful-links
+See https://github.com/osswaldo/NGCs/tree/master/Useful-links.md
 
 Copyright (C) 2022 Oliver Osswald
