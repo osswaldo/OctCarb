@@ -8,7 +8,7 @@ All content in this repository is manly based on the following publications:
 * Osswald, O., Smarsly, B. M. (2022), J. Appl. Cryst., in preparation
 
 # Quick start Guide:
-See https://github.com/osswaldo/NGCs/blob/master/Installation/Quick-Start-Guide.md
+See https://github.com/osswaldo/NGCs/blob/master/Windows-Installation/Quick-Start-Guide.md
 
 # Where is what to find
 This repository contains instruction videos, installation tutorials als examples refinement for the analysis of wide-angle X-ray/neutron (WAXS/WANS) scattering data of non-graphitic carbons (NGCs) using the Ruland & Smarsly (2002) algorithm.
