@@ -8,7 +8,7 @@ All content in this repository is manly based on the following publications:
 * Osswald, O., Smarsly, B. M. (2022), J. Appl. Cryst., in preparation
 
 # Quick start Guide:
-See https://github.com/osswaldo/NGCs/blob/master/Qick-Start-Guide.md
+See https://github.com/osswaldo/NGCs/blob/master/Installation/Quick-Start-Guide.md
 
 # Where is what to find
 This repository contains instruction videos, installation tutorials als examples refinement for the analysis of wide-angle X-ray/neutron (WAXS/WANS) scattering data of non-graphitic carbons (NGCs) using the Ruland & Smarsly (2002) algorithm.
@@ -29,7 +29,7 @@ As the name says, some instruction videos for the installation of *Octave*, fitt
 The directory *Octave* contains instructions for installing *GNU Octave* on Windows, macOS and Linux. In addition, a refinment script for get the microstructure date of non-graphitic carbons (NGCs) from wide-angle X-ray/neutron (WAXS/WANS) scattering data using the Ruland & Smarsly (2002) algorithm. Also, an instruction for compiling the needed *iObs.oct* file as well as some already compiled *iObs.oct* files are also provided, which can be used to call *iObs* from Octave. For optimal functionality, the file should be renamed to *iObs.oct* after downloading/compiling.
 If you never worked with* Octave* so far, it is highly recommended to take a look on an instruction video. Due to the high distribution and availability of *Octave*, there are a lot of instructions videos available via the internet, e.g. under https://www.youtube.com/watch?v=sHGqwF2s-tM. For this reason, there are no further basic instruction into *Octave* in this work.
 
-##Useful-links
+## Useful-links
 See https://github.com/osswaldo/NGCs/tree/master/Useful-links.md
 
 Copyright (C) 2022 Oliver Osswald
