@@ -33,7 +33,7 @@ const1 = 0;
 const2 = 0;
 
 #Switch for usage of gradient g and concentrations of impurities
-useGradient = true;
+useGradient = false;
 g      = 0;
 
 cno = 0.0; #Concentration of disordered sp3 carbon
@@ -80,7 +80,7 @@ inc = true;
 #thetaRad = Scattering angle theta in rad.
 #twoTheta = Scattering angle 2 theta in °
 #twoThetaRad = Scattering angle 2 theta in rad.
-#scatS = Scattering vector s = 2*sin(theta)/wavelength
+#scatS = Modules of the scattering vector s = 2*sin(theta)/wavelength
 #scatQ = Scattering vector q = 2*Pi*s
 type = "twoTheta";
 
@@ -143,6 +143,9 @@ useCorrAutoColl = false;  #Slit correction
 par_r           = 14;	    #Radius of the diffractometer (Debye-Scherrer) in cm
 par_delta       = 4;	    #Divergence angle in ° (it is converted as if this fixed slit were inside)
 par_l           = 5;	    #Irradiated length in cm
+
+timestamp = strftime("%Y-%m-%d_%H-%M-%S", localtime(time()));
+global id = strcat(idName, "_", timestamp);
 
 #Function to call von iObs.oct. Additional refinement parameters/correction terms can be activated.
 function fun = fun(cno, mu, beta, a3, da3, sig3, u3, eta, nu, alpha, lcc, sig1, q, cH, cN, cO, cS, dan, k, const1, const2, useQ, b, useA, density, sampleThickness, transmission, absorptionCorrection, useP, polarizedBeam, polarizationDegree, useGradient, g, useCorrAutoColl, par_r, par_delta, par_l, radiation, wavelength, s, coh, inc)
@@ -340,6 +343,10 @@ paramn4 = [lcc];
 lb5 = [lb1; lb2(1); lb2(2); lb4; lb2(3); lb3];
 ub5 = [ub1; ub2(1); ub2(2); ub4; ub2(3); ub3];
 
+#Bounds for last step (order!)
+lb6 = [lb1; lb2(1); lb2(2); lb4; lb2(3)];
+ub6 = [ub1; ub2(1); ub2(2); ub4; ub2(3)];
+
 #Typical x-value (scattering vector s)
 typicalX = 1;
 
@@ -358,7 +365,7 @@ function [stop, info] = outfun(p, optimValues, state)
   if shouldPlot == true
     plot99 = figure(99);
     plot(x, ynglobal, ".k;Data points;", "markersize", 10, x, y, strcat({"r;Fit at "},  asctime (localtime (time)), ";"), "LineWidth", 3);
-	xlabel ("Scattering vector s / A^-^1");
+	xlabel ("Modules of the scattering vector s / A^-^1");
 	ylabel ("Intensity I");
 	title ("Current refinement step");
   endif
@@ -556,6 +563,17 @@ options5.weights = wtWeight;
 options5.TypicalX = typicalX;
 options5.user_interaction = @outfun;
 
+options6.AutoScaling = autoscaling;
+options6.FunValCheck = funValCheck;
+#options6.MaxIter = maxIter;
+options6.MaxIter = 1;
+options6.TolFun = tolFun;
+options6.lbound = lb6;
+options6.ubound = ub6;
+options6.weights = wtWeight;
+options6.TypicalX = typicalX;
+options6.user_interaction = @outfun;
+
 #Load optim package
 pkg load optim;
 
@@ -572,7 +590,7 @@ yStart = fun(cno, mu, beta, a3, da3, sig3, u3, eta, nu, alpha, lcc, sig1, q, cH,
 if shouldPlot == true
 	plot0 = figure(100);
 	plot(x, yn, ".k;Data points;", "markersize", 10, x, yStart, "r;Startdata;", "LineWidth", 3);
-	xlabel ("Scattering vector s / A^-^1");
+	xlabel ("Modules of the scattering vector s / A^-^1");
 	ylabel ("Intensity I");
 	title ("0 - Start");
 endif
@@ -668,7 +686,7 @@ else
   if shouldPlot == true
     plot3 = figure(3);
     plot(x, yn, ".k;Data points;", "markersize", 10, x, yFit3, "r;Fit3;", "LineWidth", 3);
-	xlabel ("Scattering vector s / A^-^1");
+	xlabel ("Modules of the scattering vector s / A^-^1");
 	ylabel ("Intensity I");
 	title ("3 - Normalization");
   endif
@@ -744,7 +762,7 @@ else
   if shouldPlot == true
     plot1 = figure(1);
     plot(x, yn, ".k;Data points;", "markersize", 10, x, yFit1, "r;Fit1;", "LineWidth", 3);
-	xlabel ("Scattering vector s / A^-^1");
+	xlabel ("Modules of the scattering vector s / A^-^1");
 	ylabel ("Intensity I");
 	title ("1 - Interlayer");
   endif
@@ -817,7 +835,7 @@ else
   if shouldPlot == true
     plot2 = figure(2);
     plot(x, yn, ".k;Data points;", "markersize", 10, x, yFit2, "r;Fit2;", "LineWidth", 3);
-	xlabel ("Scattering vector s / A^-^1");
+	xlabel ("Modules of the scattering vector s / A^-^1");
 	ylabel ("Intensity I");
 	title ("2 - Intralayer");
   endif
@@ -863,7 +881,7 @@ else
   if shouldPlot == true
     plot3 = figure(3);
     plot(x, yn, ".k;Data points;", "markersize", 10, x, yFit3, "r;Fit3;", "LineWidth", 3);
-	xlabel ("Scattering vector s / A^-^1");
+	xlabel ("Modules of the scattering vector s / A^-^1");
 	ylabel ("Intensity I");
 	title ("3 - Normalization");
   endif
@@ -934,7 +952,7 @@ else
   if shouldPlot == true
     plot4 = figure(4);
     plot(x, yn, ".k;Data points;", "markersize", 10, x, yFit4, "r;Fit4;", "LineWidth", 3);
-	xlabel ("Scattering vector s / A^-^1");
+	xlabel ("Modules of the scattering vector s / A^-^1");
 	ylabel ("Intensity I");
 	title ("4 - lcc");
   endif
@@ -1021,7 +1039,7 @@ else
   if shouldPlot == true
     plot5 = figure(5);
     plot(x, yn, ".k;Data points;", "markersize", 10, x, yFit5, "r;Fit5;", "LineWidth", 3);
-	xlabel ("Scattering vector s / A^-^1");
+	xlabel ("Modules of the scattering vector s / A^-^1");
 	ylabel ("Intensity I");
 	title ("5 - All");
   endif
@@ -1036,6 +1054,89 @@ else
   cell2csv(strcat(fitPath, "/output_", id, "_", "5-all", ".csv"), output, ";");
 
   saveFiles("5-all", x, yFit5, yn, cno, mu, beta, a3, da3, sig3, u3, eta, nu, alpha, lcc, sig1, q, cH, cN, cO, cS, dan, k, const1, const2, useQ, b, useA, density, sampleThickness, transmission, absorptionCorrection, useP, polarizedBeam, polarizationDegree, useGradient, g, useCorrAutoColl, par_r, par_delta, par_l, radiation, wavelength, s, coh, inc, fitPath, id);
+
+  #All without normalization
+  fun6 = @(a, x) (fun(cno, a(1), a(2), a(3), a(4), a(5), u3, a(6), a(7), a(8), a(9), a(10), q, cH, cN, cO, cS, dan, k, const1, const2, useQ, b, useA, density, sampleThickness, transmission, absorptionCorrection, useP, polarizedBeam, polarizationDegree, useGradient, g, useCorrAutoColl, par_r, par_delta, par_l, radiation, wavelength, s, coh, inc));
+  "\n\n\n Alles"
+  settings.weights = options6.weights;
+  paramn6 = [mu; beta; a3; da3; sig3; eta; nu; alpha; lcc; sig1];
+  function result6 = result6fun(cno, mu, beta, a3, da3, sig3, u3, eta, nu, alpha, lcc, sig1, q, cH, cN, cO, cS, dan, k, const1, const2, useQ, b, useA, density, sampleThickness, transmission, absorptionCorrection, useP, polarizedBeam, polarizationDegree, useGradient, g, useCorrAutoColl, par_r, par_delta, par_l, radiation, wavelength, s, coh, inc, fitPath, id, x, param6, yn, settings, errorCount = 1)
+   maxerrorCount = 10;
+    result6.covp = 100*eye(length(param6));
+    try
+      result6 = curvefit_stat(@(a) (fun(cno, a(1), a(2), a(3), a(4), a(5), u3, a(6), a(7), a(8), a(9), a(10), q, cH, cN, cO, cS, dan, k, const1, const2, useQ, b, useA, density, sampleThickness, transmission, absorptionCorrection, useP, polarizedBeam, polarizationDegree, useGradient, g, useCorrAutoColl, par_r, par_delta, par_l, radiation, wavelength, x, coh, inc)), param6, x, yn, settings)
+    catch
+      lasterror.message
+      if errorCount < maxerrorCount
+        result6 = result6fun(cno, mu, beta, a3, da3, sig3, u3, eta, nu, alpha, lcc, sig1, q, cH, cN, cO, cS, dan, k, const1, const2, useQ, b, useA, density, sampleThickness, transmission, absorptionCorrection, useP, polarizedBeam, polarizationDegree, useGradient, g, useCorrAutoColl, par_r, par_delta, par_l, radiation, wavelength, s, coh, inc, x, param3, yn, settings, errorCount + 1)
+      endif
+    end_try_catch
+  endfunction
+    
+  function [param6, f6, cvg6, outp6, result6] = fit6(fun6, paramn6, x, yn, options6, settings, cno, mu, beta, a3, da3, sig3, u3, eta, nu, alpha, lcc, sig1, q, cH, cN, cO, cS, dan, k, const1, const2, useQ, b, useA, density, sampleThickness, transmission, absorptionCorrection, useP, polarizedBeam, polarizationDegree, useGradient, g, useCorrAutoColl, par_r, par_delta, par_l, radiation, wavelength, s, coh, inc, fitPath, id, errorCount = 1)
+    maxerrorCount = 10;
+    try
+      timeStartFit = time();
+      [param6, f6, cvg6, outp6] = nonlin_curvefit(fun6, paramn6, x, yn, options6);
+      timeEndeFit = time();
+      dauerFit = timeEndeFit - timeStartFit
+    catch
+      lasterror.message
+      if errorCount < maxerrorCount
+        [param6, f6, cvg6, outp6, result6] = fit6(fun6, paramn6, x, yn, options6, settings, cno, mu, beta, a3, da3, sig3, u3, eta, nu, alpha, lcc, sig1, q, cH, cN, cO, cS, dan, k, const1, const2, useQ, b, useA, density, sampleThickness, transmission, absorptionCorrection, useP, polarizedBeam, polarizationDegree, useGradient, g, useCorrAutoColl, par_r, par_delta, par_l, radiation, wavelength, s, coh, inc, fitPath, id, errorCount + 1);
+	    else
+        error("Too many errors when refine")
+      endif
+    end_try_catch
+    result6 = result6fun(cno, mu, beta, a3, da3, sig3, u3, eta, nu, alpha, lcc, sig1, q, cH, cN, cO, cS, dan, k, const1, const2, useQ, b, useA, density, sampleThickness, transmission, absorptionCorrection, useP, polarizedBeam, polarizationDegree, useGradient, g, useCorrAutoColl, par_r, par_delta, par_l, radiation, wavelength, s, coh, inc, fitPath, id, x, param6, yn, settings);
+  endfunction
+
+  [param6, f6, cvg6, outp6, result6] = fit6(fun6, paramn6, x, yn, options6, settings, cno, mu, beta, a3, da3, sig3, u3, eta, nu, alpha, lcc, sig1, q, cH, cN, cO, cS, dan, k, const1, const2, useQ, b, useA, density, sampleThickness, transmission, absorptionCorrection, useP, polarizedBeam, polarizationDegree, useGradient, g, useCorrAutoColl, par_r, par_delta, par_l, radiation, wavelength, s, coh, inc, fitPath, id);
+  paramn6 = param6;
+
+  mu     = param6(1)
+  beta   = param6(2)
+  a3     = param6(3)
+  da3    = param6(4)
+  sig3   = param6(5)
+  eta    = param6(6)
+  nu     = param6(7)
+  alpha  = param6(8)
+  lcc    = param6(9)
+  sig1   = param6(10)
+
+  convergence6 = flag(cvg6)
+  outp6 = outp6;
+  for i=1:length(param6)
+    stdabw6(i) = sqrt(result6.covp(i, i));
+    mat6(i, 1) = param6(i);
+    mat6(i, 2) = 1*stdabw6(i);
+    mat6(i, 3) = 2*stdabw6(i);
+    mat6(i, 4) = 3*stdabw6(i);
+  endfor
+  stdabw6 = stdabw6';
+  mat6 = mat6
+
+  yFit6 = fun(cno, mu, beta, a3, da3, sig3, u3, eta, nu, alpha, lcc, sig1, q, cH, cN, cO, cS, dan, k, const1, const2, useQ, b, useA, density, sampleThickness, transmission, absorptionCorrection, useP, polarizedBeam, polarizationDegree, useGradient, g, useCorrAutoColl, par_r, par_delta, par_l, radiation, wavelength, x, coh, inc);
+
+  if shouldPlot == true
+    plot6 = figure(6);
+    plot(x, yn, ".k;Data points;", "markersize", 10, x, yFit6, "r;Fit6;", "LineWidth", 3);
+	xlabel ("Modules of the scattering vector s / A^-^1");
+	ylabel ("Intensity I");
+	title ("6 - All without normalization");
+  endif
+
+  output(1, 1) = cellstr("s");
+  output(1, 2) = cellstr("iObs(s)");
+  for i=1:length(x)
+    output(i+1, 1) = x(i);
+    output(i+1, 2) = yFit6(i);
+  endfor
+  
+  cell2csv(strcat(fitPath, "/output_", id, "_", "6-all-without-normalization", ".csv"), output, ";");
+
+  saveFiles("6-all-without-normalization", x, yFit6, yn, cno, mu, beta, a3, da3, sig3, u3, eta, nu, alpha, lcc, sig1, q, cH, cN, cO, cS, dan, k, const1, const2, useQ, b, useA, density, sampleThickness, transmission, absorptionCorrection, useP, polarizedBeam, polarizationDegree, useGradient, g, useCorrAutoColl, par_r, par_delta, par_l, radiation, wavelength, s, coh, inc, fitPath, id);
 
   paramFinish = [cno; mu; beta; a3; da3; sig3; u3; eta; nu; alpha; sig1; lcc; q; dan; k; const1; const2; g];
 
@@ -1059,17 +1160,17 @@ else
   if shouldPlot == true
     plot7 = figure(7);
     plot(x0, y0, "k;Zero line;", "LineWidth", 3, x, dy, ".r;errorCount;");
-	xlabel ("Scattering vector s / A^-^1");
+	xlabel ("Modules of the scattering vector s / A^-^1");
 	ylabel ("Intensity I");
 	title ("7 - Error");
     plot8 = figure(8);
     plot(x, ynLog, ".k;Data points;", "markersize", 10, x, yFitLogPlot, "r;Fit;", "LineWidth", 3);
-	xlabel ("Scattering vector s / A^-^1");
+	xlabel ("Modules of the scattering vector s / A^-^1");
 	ylabel ("Intensity I");
 	title ("8 - Log");
     plot9 = figure(9);
     plot(x0, y0, "k;Zero line;", "LineWidth", 3, x, dyLog, ".r;errorCount;");
-	xlabel ("Scattering vector s / A^-^1");
+	xlabel ("Modules of the scattering vector s / A^-^1");
 	ylabel ("Intensity I");
 	title ("9 - Log error");
   endif
@@ -1096,6 +1197,7 @@ endif
     saveas(plot3, (strcat(fitPath, "/3_normalisierung_", id, ".png")));
     saveas(plot4, (strcat(fitPath, "/4_lcc_", id, ".png")));
     saveas(plot5, (strcat(fitPath, "/5_all_", id, ".png")));
+    saveas(plot6, (strcat(fitPath, "/6_all_without_normalization_", id, ".png")));
     saveas(plot7, (strcat(fitPath, "/7_errorCount_", id, ".png")));
     saveas(plot8, (strcat(fitPath, "/8_allLog_", id, ".png")));
     saveas(plot9, (strcat(fitPath, "/9_errorCountLog_", id, ".png")));
@@ -1108,6 +1210,7 @@ endif
   "param3", "convergence3", "outp3", "result3", "stdabw3", "mat3",
   "param4", "convergence4", "outp4", "result4", "stdabw4", "mat4",
   "param5", "convergence5", "outp5", "result5", "stdabw5", "mat5",
+  "param6", "convergence6", "outp6", "result6", "stdabw6", "mat6",
   "rQuadratFit", "chiQuadratFit");
 
   "\n\n\n Refined values"
@@ -1116,19 +1219,19 @@ endif
   cno2     = 2*cno1;
   cno3     = 3*cno1;
   mu       = mu
-  mu1      = mat5(1, 2);
+  mu1      = mat6(1, 2);
   mu2      = 2*mu1;
   mu3      = 3*mu1;
   beta     = beta
-  beta1    = mat5(2, 2);
+  beta1    = mat6(2, 2);
   beta2    = 2*beta1;
   beta3    = 3*beta1;
   a3       = a3
-  a31      = mat5(3, 2);
+  a31      = mat6(3, 2);
   a32      = 2*a31;
   a33      = 3*a31;
   da3      = da3
-  da31     = mat5(4, 2);
+  da31     = mat6(4, 2);
   da32     = 2*da31;
   da33     = 3*da31;
   a3min    = a3-da3
@@ -1136,7 +1239,7 @@ endif
   a3min2   = 2*a3min1;
   a3min3   = 3*a3min1;
   sig3     = sig3
-  sig31    = mat5(5, 2);
+  sig31    = mat6(5, 2);
   sig32    = 2*sig31;
   sig33    = 3*sig31;
   u3       = u3;
@@ -1144,7 +1247,7 @@ endif
   u32      = 2*u31;
   u33      = 3*u31;
   eta      = eta
-  eta1     = mat5(6, 2);
+  eta1     = mat6(6, 2);
   eta2     = 2*eta1;
   eta3     = 3*eta1;
   nu       = nu
@@ -1152,15 +1255,15 @@ endif
   nu2      = 2*nu1;
   nu3      = 3*nu1;
   alpha    = alpha
-  alpha1   = mat5(7, 2);
+  alpha1   = mat6(7, 2);
   alpha2   = 2*alpha1;
   alpha3   = 3*alpha1;
   sig1     = sig1
-  sig11    = mat5(8, 2);
+  sig11    = mat6(8, 2);
   sig12    = 2*sig11;
   sig13    = 3*sig11;
   lcc      = lcc
-  lcc1     = mat5(9, 2);
+  lcc1     = mat6(9, 2);
   lcc2     = 2*lcc1;
   lcc3     = 3*lcc1;
   q        = q

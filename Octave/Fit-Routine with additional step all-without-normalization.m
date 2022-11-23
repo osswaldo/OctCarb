@@ -33,7 +33,7 @@ const1 = 0;
 const2 = 0;
 
 #Switch for usage of gradient g and concentrations of impurities
-useGradient = true;
+useGradient = false;
 g      = 0;
 
 cno = 0.0; #Concentration of disordered sp3 carbon
@@ -80,7 +80,7 @@ inc = true;
 #thetaRad = Scattering angle theta in rad.
 #twoTheta = Scattering angle 2 theta in °
 #twoThetaRad = Scattering angle 2 theta in rad.
-#scatS = Scattering vector s = 2*sin(theta)/wavelength
+#scatS = Modules of the scattering vector s = 2*sin(theta)/wavelength
 #scatQ = Scattering vector q = 2*Pi*s
 type = "twoTheta";
 
@@ -143,6 +143,9 @@ useCorrAutoColl = false;  #Slit correction
 par_r           = 14;	    #Radius of the diffractometer (Debye-Scherrer) in cm
 par_delta       = 4;	    #Divergence angle in ° (it is converted as if this fixed slit were inside)
 par_l           = 5;	    #Irradiated length in cm
+
+timestamp = strftime("%Y-%m-%d_%H-%M-%S", localtime(time()));
+global id = strcat(idName, "_", timestamp);
 
 #Function to call von iObs.oct. Additional refinement parameters/correction terms can be activated.
 function fun = fun(cno, mu, beta, a3, da3, sig3, u3, eta, nu, alpha, lcc, sig1, q, cH, cN, cO, cS, dan, k, const1, const2, useQ, b, useA, density, sampleThickness, transmission, absorptionCorrection, useP, polarizedBeam, polarizationDegree, useGradient, g, useCorrAutoColl, par_r, par_delta, par_l, radiation, wavelength, s, coh, inc)
@@ -362,7 +365,7 @@ function [stop, info] = outfun(p, optimValues, state)
   if shouldPlot == true
     plot99 = figure(99);
     plot(x, ynglobal, ".k;Data points;", "markersize", 10, x, y, strcat({"r;Fit at "},  asctime (localtime (time)), ";"), "LineWidth", 3);
-	xlabel ("Scattering vector s / A^-^1");
+	xlabel ("Modules of the scattering vector s / A^-^1");
 	ylabel ("Intensity I");
 	title ("Current refinement step");
   endif
@@ -562,7 +565,8 @@ options5.user_interaction = @outfun;
 
 options6.AutoScaling = autoscaling;
 options6.FunValCheck = funValCheck;
-options6.MaxIter = maxIter;
+#options6.MaxIter = maxIter;
+options6.MaxIter = 1;
 options6.TolFun = tolFun;
 options6.lbound = lb6;
 options6.ubound = ub6;
@@ -586,7 +590,7 @@ yStart = fun(cno, mu, beta, a3, da3, sig3, u3, eta, nu, alpha, lcc, sig1, q, cH,
 if shouldPlot == true
 	plot0 = figure(100);
 	plot(x, yn, ".k;Data points;", "markersize", 10, x, yStart, "r;Startdata;", "LineWidth", 3);
-	xlabel ("Scattering vector s / A^-^1");
+	xlabel ("Modules of the scattering vector s / A^-^1");
 	ylabel ("Intensity I");
 	title ("0 - Start");
 endif
@@ -682,7 +686,7 @@ else
   if shouldPlot == true
     plot3 = figure(3);
     plot(x, yn, ".k;Data points;", "markersize", 10, x, yFit3, "r;Fit3;", "LineWidth", 3);
-	xlabel ("Scattering vector s / A^-^1");
+	xlabel ("Modules of the scattering vector s / A^-^1");
 	ylabel ("Intensity I");
 	title ("3 - Normalization");
   endif
@@ -758,7 +762,7 @@ else
   if shouldPlot == true
     plot1 = figure(1);
     plot(x, yn, ".k;Data points;", "markersize", 10, x, yFit1, "r;Fit1;", "LineWidth", 3);
-	xlabel ("Scattering vector s / A^-^1");
+	xlabel ("Modules of the scattering vector s / A^-^1");
 	ylabel ("Intensity I");
 	title ("1 - Interlayer");
   endif
@@ -831,7 +835,7 @@ else
   if shouldPlot == true
     plot2 = figure(2);
     plot(x, yn, ".k;Data points;", "markersize", 10, x, yFit2, "r;Fit2;", "LineWidth", 3);
-	xlabel ("Scattering vector s / A^-^1");
+	xlabel ("Modules of the scattering vector s / A^-^1");
 	ylabel ("Intensity I");
 	title ("2 - Intralayer");
   endif
@@ -877,7 +881,7 @@ else
   if shouldPlot == true
     plot3 = figure(3);
     plot(x, yn, ".k;Data points;", "markersize", 10, x, yFit3, "r;Fit3;", "LineWidth", 3);
-	xlabel ("Scattering vector s / A^-^1");
+	xlabel ("Modules of the scattering vector s / A^-^1");
 	ylabel ("Intensity I");
 	title ("3 - Normalization");
   endif
@@ -948,7 +952,7 @@ else
   if shouldPlot == true
     plot4 = figure(4);
     plot(x, yn, ".k;Data points;", "markersize", 10, x, yFit4, "r;Fit4;", "LineWidth", 3);
-	xlabel ("Scattering vector s / A^-^1");
+	xlabel ("Modules of the scattering vector s / A^-^1");
 	ylabel ("Intensity I");
 	title ("4 - lcc");
   endif
@@ -1035,7 +1039,7 @@ else
   if shouldPlot == true
     plot5 = figure(5);
     plot(x, yn, ".k;Data points;", "markersize", 10, x, yFit5, "r;Fit5;", "LineWidth", 3);
-	xlabel ("Scattering vector s / A^-^1");
+	xlabel ("Modules of the scattering vector s / A^-^1");
 	ylabel ("Intensity I");
 	title ("5 - All");
   endif
@@ -1118,7 +1122,7 @@ else
   if shouldPlot == true
     plot6 = figure(6);
     plot(x, yn, ".k;Data points;", "markersize", 10, x, yFit6, "r;Fit6;", "LineWidth", 3);
-	xlabel ("Scattering vector s / A^-^1");
+	xlabel ("Modules of the scattering vector s / A^-^1");
 	ylabel ("Intensity I");
 	title ("6 - All without normalization");
   endif
@@ -1156,17 +1160,17 @@ else
   if shouldPlot == true
     plot7 = figure(7);
     plot(x0, y0, "k;Zero line;", "LineWidth", 3, x, dy, ".r;errorCount;");
-	xlabel ("Scattering vector s / A^-^1");
+	xlabel ("Modules of the scattering vector s / A^-^1");
 	ylabel ("Intensity I");
 	title ("7 - Error");
     plot8 = figure(8);
     plot(x, ynLog, ".k;Data points;", "markersize", 10, x, yFitLogPlot, "r;Fit;", "LineWidth", 3);
-	xlabel ("Scattering vector s / A^-^1");
+	xlabel ("Modules of the scattering vector s / A^-^1");
 	ylabel ("Intensity I");
 	title ("8 - Log");
     plot9 = figure(9);
     plot(x0, y0, "k;Zero line;", "LineWidth", 3, x, dyLog, ".r;errorCount;");
-	xlabel ("Scattering vector s / A^-^1");
+	xlabel ("Modules of the scattering vector s / A^-^1");
 	ylabel ("Intensity I");
 	title ("9 - Log error");
   endif
