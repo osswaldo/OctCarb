@@ -50,13 +50,15 @@ plotOnly = false;
 global shouldPlot = true;
 
 #Name of the series and id of the sample
-name = "name";
-global id = "id";
-#Filename and path the currently used file, must also contain iObs.oct. The path must be changed twice.
-filename = "filename.m";
-#The '/' symbol must be used in the paths
-path = '<path_to_filename>';
-cd '<path_to_filename>';
+name = "Test-Data";
+sampleId = "Fit";
+
+#Filename and path the currently used file, must also contain iObs.oct. The path must be changed twice. The paths are read programmatically.
+[dir, file, ext] = fileparts(mfilename('fullpathext'));
+filename = strcat(file, ext); # path is read programmatically
+#The '/' symbol should be used in the paths
+path = fileparts(mfilename('fullpath'));
+cd(path);
 
 #Measurement data file
 measFile = '<path_to_measurement_file>';
@@ -115,7 +117,7 @@ lb4 = [1.2];
 ub4 = [1.8];
 
 #Function tolerance
-tolFun = 1e-1000;
+tolFun = 1e-100;
 
 #Maximal iterations per fit step
 maxIter = 50;
@@ -129,7 +131,7 @@ weight = "normal";
 useQ    = false; #Additional Debye-Waller-factor
 b       = 0.002; #Factor
 
-useA                  = true;    #Absorption correction
+useA                  = false;    #Absorption correction
 density               = 2.2;     #Density of sample in g/cm^3
 sampleThickness       = 0.3;     #Sample thickness in cm
 transmission          = false;   #Transmission geometry (if false, reflection geometry is assumed)
@@ -145,7 +147,7 @@ par_delta       = 4;	    #Divergence angle in ° (it is converted as if this fixe
 par_l           = 5;	    #Irradiated length in cm
 
 timestamp = strftime("%Y-%m-%d_%H-%M-%S", localtime(time()));
-global id = strcat(idName, "_", timestamp);
+global id = strcat(sampleId, "_", timestamp);
 
 #Function to call von iObs.oct. Additional refinement parameters/correction terms can be activated.
 function fun = fun(cno, mu, beta, a3, da3, sig3, u3, eta, nu, alpha, lcc, sig1, q, cH, cN, cO, cS, dan, k, const1, const2, useQ, b, useA, density, sampleThickness, transmission, absorptionCorrection, useP, polarizedBeam, polarizationDegree, useGradient, g, useCorrAutoColl, par_r, par_delta, par_l, radiation, wavelength, s, coh, inc)
@@ -359,7 +361,7 @@ function [stop, info] = outfun(p, optimValues, state)
   observations = optimValues.observations;
   
   if shouldPlot == true
-    plot99 = figure(99);
+    plot99 = figure(99, 'name', 'Current refinement step');
     plot(x, ynglobal, ".k;Data points;", "markersize", 10, x, y, strcat({"r;Fit at "},  asctime (localtime (time)), ";"), "LineWidth", 3);
 	xlabel ("Modules of the scattering vector s / A^-^1");
 	ylabel ("Intensity I");
@@ -573,7 +575,7 @@ settings.objf_type = "wls";
 #Plot of start values
 yStart = fun(cno, mu, beta, a3, da3, sig3, u3, eta, nu, alpha, lcc, sig1, q, cH, cN, cO, cS, dan, k, const1, const2, useQ, b, useA, density, sampleThickness, transmission, absorptionCorrection, useP, polarizedBeam, polarizationDegree, useGradient, g, useCorrAutoColl, par_r, par_delta, par_l, radiation, wavelength, x, coh, inc);
 if shouldPlot == true
-	plot0 = figure(100);
+	plot0 = figure(100, 'name', 'Start');
 	plot(x, yn, ".k;Data points;", "markersize", 10, x, yStart, "r;Startdata;", "LineWidth", 3);
 	xlabel ("Modules of the scattering vector s / A^-^1");
 	ylabel ("Intensity I");
@@ -602,7 +604,7 @@ else
       y = "Canceled.";
     endif
     if flag == 0
-      y = "Maximum id of iterations.";
+      y = "Maximum number of iterations.";
     endif
     if flag == 2
       y = "Change in refinement parameters too small.";
@@ -669,7 +671,7 @@ else
   yFit3 = fun(cno, mu, beta, a3, da3, sig3, u3, eta, nu, alpha, lcc, sig1, q, cH, cN, cO, cS, dan, k, const1, const2, useQ, b, useA, density, sampleThickness, transmission, absorptionCorrection, useP, polarizedBeam, polarizationDegree, useGradient, g, useCorrAutoColl, par_r, par_delta, par_l, radiation, wavelength, x, coh, inc);
  
   if shouldPlot == true
-    plot3 = figure(3);
+    plot3 = figure(3, 'name', 'Normalization');
     plot(x, yn, ".k;Data points;", "markersize", 10, x, yFit3, "r;Fit3;", "LineWidth", 3);
 	xlabel ("Modules of the scattering vector s / A^-^1");
 	ylabel ("Intensity I");
@@ -745,7 +747,7 @@ else
   yFit1 = fun(cno, mu, beta, a3, da3, sig3, u3, eta, nu, alpha, lcc, sig1, q, cH, cN, cO, cS, dan, k, const1, const2, useQ, b, useA, density, sampleThickness, transmission, absorptionCorrection, useP, polarizedBeam, polarizationDegree, useGradient, g, useCorrAutoColl, par_r, par_delta, par_l, radiation, wavelength, x, coh, inc);
   
   if shouldPlot == true
-    plot1 = figure(1);
+    plot1 = figure(1, 'name', 'Interlayer');
     plot(x, yn, ".k;Data points;", "markersize", 10, x, yFit1, "r;Fit1;", "LineWidth", 3);
 	xlabel ("Modules of the scattering vector s / A^-^1");
 	ylabel ("Intensity I");
@@ -818,7 +820,7 @@ else
   yFit2 = fun(cno, mu, beta, a3, da3, sig3, u3, eta, nu, alpha, lcc, sig1, q, cH, cN, cO, cS, dan, k, const1, const2, useQ, b, useA, density, sampleThickness, transmission, absorptionCorrection, useP, polarizedBeam, polarizationDegree, useGradient, g, useCorrAutoColl, par_r, par_delta, par_l, radiation, wavelength, x, coh, inc);
   
   if shouldPlot == true
-    plot2 = figure(2);
+    plot2 = figure(2, 'name', 'Intralayer');
     plot(x, yn, ".k;Data points;", "markersize", 10, x, yFit2, "r;Fit2;", "LineWidth", 3);
 	xlabel ("Modules of the scattering vector s / A^-^1");
 	ylabel ("Intensity I");
@@ -838,6 +840,7 @@ else
 
 
   #Normalisierung
+  #{
   "\n\n\n Normalization"
   [param3, f3, cvg3, outp3, result3] = fit3(fun3, paramn3, x, yn, options3, settings, cno, mu, beta, a3, da3, sig3, u3, eta, nu, alpha, lcc, sig1, q, cH, cN, cO, cS, dan, k, const1, const2, useQ, b, useA, density, sampleThickness, transmission, absorptionCorrection, useP, polarizedBeam, polarizationDegree, useGradient, g, useCorrAutoColl, par_r, par_delta, par_l, radiation, wavelength, s, coh, inc, fitPath, id);
   paramn3 = param3;
@@ -864,7 +867,7 @@ else
   yFit3 = fun(cno, mu, beta, a3, da3, sig3, u3, eta, nu, alpha, lcc, sig1, q, cH, cN, cO, cS, dan, k, const1, const2, useQ, b, useA, density, sampleThickness, transmission, absorptionCorrection, useP, polarizedBeam, polarizationDegree, useGradient, g, useCorrAutoColl, par_r, par_delta, par_l, radiation, wavelength, x, coh, inc);
   
   if shouldPlot == true
-    plot3 = figure(3);
+    plot3 = figure(3, 'name', 'Normalization');
     plot(x, yn, ".k;Data points;", "markersize", 10, x, yFit3, "r;Fit3;", "LineWidth", 3);
 	xlabel ("Modules of the scattering vector s / A^-^1");
 	ylabel ("Intensity I");
@@ -881,7 +884,7 @@ else
   cell2csv(strcat(fitPath, "/output_", id, "_", "3-normalization", ".csv"), output, ";");
 
   saveFiles("3-normalization", x, yFit3, yn, cno, mu, beta, a3, da3, sig3, u3, eta, nu, alpha, lcc, sig1, q, cH, cN, cO, cS, dan, k, const1, const2, useQ, b, useA, density, sampleThickness, transmission, absorptionCorrection, useP, polarizedBeam, polarizationDegree, useGradient, g, useCorrAutoColl, par_r, par_delta, par_l, radiation, wavelength, s, coh, inc, fitPath, id);
-
+  #}
 
   #lcc
   fun4 = @(a, x) (fun(cno, mu, beta, a3, da3, sig3, u3, eta, nu, alpha, a(1), sig1, q, cH, cN, cO, cS, dan, k, const1, const2, useQ, b, useA, density, sampleThickness, transmission, absorptionCorrection, useP, polarizedBeam, polarizationDegree, useGradient, g, useCorrAutoColl, par_r, par_delta, par_l, radiation, wavelength, x, coh, inc));
@@ -935,7 +938,7 @@ else
   yFit4 = fun(cno, mu, beta, a3, da3, sig3, u3, eta, nu, alpha, lcc, sig1, q, cH, cN, cO, cS, dan, k, const1, const2, useQ, b, useA, density, sampleThickness, transmission, absorptionCorrection, useP, polarizedBeam, polarizationDegree, useGradient, g, useCorrAutoColl, par_r, par_delta, par_l, radiation, wavelength, x, coh, inc);
   
   if shouldPlot == true
-    plot4 = figure(4);
+    plot4 = figure(4, 'name', 'lcc');
     plot(x, yn, ".k;Data points;", "markersize", 10, x, yFit4, "r;Fit4;", "LineWidth", 3);
 	xlabel ("Modules of the scattering vector s / A^-^1");
 	ylabel ("Intensity I");
@@ -1022,11 +1025,11 @@ else
   yFit5 = fun(cno, mu, beta, a3, da3, sig3, u3, eta, nu, alpha, lcc, sig1, q, cH, cN, cO, cS, dan, k, const1, const2, useQ, b, useA, density, sampleThickness, transmission, absorptionCorrection, useP, polarizedBeam, polarizationDegree, useGradient, g, useCorrAutoColl, par_r, par_delta, par_l, radiation, wavelength, x, coh, inc);
    
   if shouldPlot == true
-    plot5 = figure(5);
+    plot5 = figure(5, 'name', 'All parameters');
     plot(x, yn, ".k;Data points;", "markersize", 10, x, yFit5, "r;Fit5;", "LineWidth", 3);
 	xlabel ("Modules of the scattering vector s / A^-^1");
 	ylabel ("Intensity I");
-	title ("5 - All");
+	title ("5 - All parameters");
   endif
 
   output(1, 1) = cellstr("s");
@@ -1060,17 +1063,17 @@ else
   y0 = [0; 0];
 
   if shouldPlot == true
-    plot7 = figure(7);
+    plot7 = figure(7, 'name', 'Error');
     plot(x0, y0, "k;Zero line;", "LineWidth", 3, x, dy, ".r;errorCount;");
 	xlabel ("Modules of the scattering vector s / A^-^1");
 	ylabel ("Intensity I");
 	title ("7 - Error");
-    plot8 = figure(8);
+    plot8 = figure(8, 'name', 'Log');
     plot(x, ynLog, ".k;Data points;", "markersize", 10, x, yFitLogPlot, "r;Fit;", "LineWidth", 3);
 	xlabel ("Modules of the scattering vector s / A^-^1");
 	ylabel ("Intensity I");
 	title ("8 - Log");
-    plot9 = figure(9);
+    plot9 = figure(9, 'name', 'Log error');
     plot(x0, y0, "k;Zero line;", "LineWidth", 3, x, dyLog, ".r;errorCount;");
 	xlabel ("Modules of the scattering vector s / A^-^1");
 	ylabel ("Intensity I");
