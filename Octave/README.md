@@ -7,7 +7,7 @@ All content in this repository is manly based on the following publications:
 * Ruland, W. and Smarsly, B. M. (2002), X-ray scattering of non-graphitic carbon: an improved method of evaluation. J. Appl. Cryst., 35, 624-633, [doi:10.1107/S0021889802011007](https://doi.org/10.1107/S0021889802011007)
 * Faber, K., Badaczewski, F., Oschatz, M., Mondin, G., Nickel, W., Kaskel, S., Smarsly, B. M. (2014), In-Depth Investigation of the Carbon Microstructure of Silicon Carbide-Derived Carbons by Wide-Angle X-ray Scattering, J. Phys. Chem. C., 118, 29, 15705-15715, [doi:10.1021/jp502832x](https://doi.org/10.1021/jp502832x)
 * Pfaff, T., Simmermacher, M. & Smarsly, B. M. (2018), *CarbX*: a program for the evaluation of wide-angle X-ray scattering data of non-graphitic carbons, J. Appl. Cryst., 51, 219-229, [doi:10.1107/S1600576718000195](https://doi.org/10.1107/S1600576718000195)
-* Osswald, O., Smarsly, B. M. (2022), J. Appl. Cryst., in preparation
+* Osswald, O. & Smarsly, B. M. (2022), *OctCarb* — A GNU *Octave* Script for the Analysis and Evaluation of Wide-Angle Scattering Data of Non-Graphitic Carbons, C - Journal of Carbon Research, 8(4), 78, doi:10.3390/c8040078](https://doi.org/10.3390/c8040078)
 
 ## Fit-routine.m
 The file *Fit-routine.m* contains an *Octave*-script (*OctCarb*) for the refinement of measured WAXS/WANS data using the model of Ruland and Smarsly (2002). The input parameters are descriped in the file itself and in https://github.com/osswaldo/ngcs/README.md.
