@@ -55,7 +55,7 @@ sampleId = "Fit";
 
 #Filename and path the currently used file, must also contain iObs.oct. The path must be changed twice. The paths are read programmatically.
 [dir, file, ext] = fileparts(mfilename('fullpathext'));
-filename = strcat(file, ext); # path is read programmatically
+filename = strcat(file, ext, ".m"); # path is read programmatically
 #The '/' symbol should be used in the paths
 path = fileparts(mfilename('fullpath'));
 cd(path);
