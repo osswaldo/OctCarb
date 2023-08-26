@@ -32,4 +32,4 @@ If you never worked with* Octave* so far, it is highly recommended to take a loo
 ## Useful-links
 See https://github.com/osswaldo/NGCs/tree/master/Useful-links.md
 
-Copyright (C) 2022 Oliver Osswald
+Copyright (C) 2023 Oliver Osswald

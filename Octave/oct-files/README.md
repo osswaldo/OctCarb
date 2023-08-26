@@ -76,4 +76,4 @@ mkoctfile -I/usr/local/bin/octave "<*path_to_iObsPDF*>/iObsPDF.cpp"
 ```
 This generates an *iObs.oct* and an *iObsPDF.oct* file in the current directory.
 
-Copyright (C) 2022 Oliver Osswald
+Copyright (C) 2023 Oliver Osswald

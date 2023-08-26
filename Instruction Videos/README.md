@@ -22,4 +22,4 @@ Fit-Anleitung:			https://www.youtube.com/watch?v=8J50wnWgtIw
 If you prefer, you can also download the videos from my private server:
 https://ngcs.oss-wald.de/videos
 
-Copyright (C) 2022 Oliver Osswald
+Copyright (C) 2023 Oliver Osswald

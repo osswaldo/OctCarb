@@ -53,11 +53,11 @@ global shouldPlot = true;
 name = "Test-Data";
 sampleId = "Fit";
 
-#Filename and path the currently used file, must also contain iObs.oct. The path must be changed twice. The paths are read programmatically.
-[dir, file, ext] = fileparts(mfilename('fullpathext'));
-filename = strcat(file, ext, ".m"); # path is read programmatically
-#The '/' symbol should be used in the paths
-path = fileparts(mfilename('fullpath'));
+#Filename and path the currently used file, it must also contain iObs.oct. The path must be changed twice.
+#The paths are read programmatically. However, they can also be set manually. Hence, the '/' symbol should be used in the paths
+[path, file, ext] = fileparts(mfilename('fullpath'));
+path = path
+filename = strcat(file, ext, ".m") # path is read programmatically
 cd(path);
 
 #Measurement data file
@@ -78,9 +78,9 @@ coh = true;
 inc = true;
 
 #Type of x-values:
-#theta = Scattering angle theta in °
+#theta = Scattering angle theta in ï¿½
 #thetaRad = Scattering angle theta in rad.
-#twoTheta = Scattering angle 2 theta in °
+#twoTheta = Scattering angle 2 theta in ï¿½
 #twoThetaRad = Scattering angle 2 theta in rad.
 #scatS = Modules of the scattering vector s = 2*sin(theta)/wavelength
 #scatQ = Scattering vector q = 2*Pi*s
@@ -139,11 +139,11 @@ absorptionCorrection  = 1;       #Correction factor for absorption coefficient (
 
 useP                  = true;    #Polarization correction
 polarizedBeam         = false;   #Do you use a polarized beam?
-polarizationDegree    = 0;       #Polarization direction of beam in °.
+polarizationDegree    = 0;       #Polarization direction of beam in ï¿½.
 
 useCorrAutoColl = false;  #Slit correction
 par_r           = 14;	    #Radius of the diffractometer (Debye-Scherrer) in cm
-par_delta       = 4;	    #Divergence angle in ° (it is converted as if this fixed slit were inside)
+par_delta       = 4;	    #Divergence angle in ï¿½ (it is converted as if this fixed slit were inside)
 par_l           = 5;	    #Irradiated length in cm
 
 timestamp = strftime("%Y-%m-%d_%H-%M-%S", localtime(time()));
@@ -164,6 +164,8 @@ endfunction
 #Lines below should be left as it is
 
 #Load optim package
+pkg load statistics;
+pkg load io;
 pkg load optim;
 
 #Vector containing start parameters
@@ -289,8 +291,7 @@ function SofQ = lorgaunCorrection(x, y, minX = 0, maxX = 100)
   f = @ (p, x) (pseudoVoigt(x, p(1), p(2), 0, 0, p(3)));
   
   [p, fy, cvg, outp] = nonlin_curvefit(f, pin, xnew, ynew, options);
-  
-  
+    
   fy = fy;
   p = p
   cvg = cvg
@@ -321,7 +322,6 @@ if weight == "normal"
 else
   for i=1:length(yn)
     wtWeight(i) = 1/(yn(i)+10);
-	  
   endfor
 endif
 
@@ -622,7 +622,7 @@ else
    maxerrorCount = 10;
     result3.covp = 100*eye(length(param3));
     try
-      result3 = curvefit_stat(@(a) (fun(cno, mu, beta, a3, da3, sig3, u3, eta, nu, alpha, lcc, sig1, a(1), cH, cN, cO, cS, a(2), a(3), a(4), a(5), useQ, b, useA, density, sampleThickness, transmission, absorptionCorrection, useP, polarizedBeam, polarizationDegree, useGradient, a(6), useCorrAutoColl, par_r, par_delta, par_l, radiation, wavelength, s, coh, inc)), param3, x, yn, settings);
+      result3 = curvefit_stat(@(a, x) (fun(cno, mu, beta, a3, da3, sig3, u3, eta, nu, alpha, lcc, sig1, a(1), cH, cN, cO, cS, a(2), a(3), a(4), a(5), useQ, b, useA, density, sampleThickness, transmission, absorptionCorrection, useP, polarizedBeam, polarizationDegree, useGradient, a(6), useCorrAutoColl, par_r, par_delta, par_l, radiation, wavelength, x, coh, inc)), param3, x, yn, settings);
     catch
       lasterror.message
       if errorCount < maxerrorCount
@@ -646,7 +646,7 @@ else
     result3 = result3fun(cno, mu, beta, a3, da3, sig3, u3, eta, nu, alpha, lcc, sig1, q, cH, cN, cO, cS, dan, k, const1, const2, useQ, b, useA, density, sampleThickness, transmission, absorptionCorrection, useP, polarizedBeam, polarizationDegree, useGradient, g, useCorrAutoColl, par_r, par_delta, par_l, radiation, wavelength, s, coh, inc, x, param3, yn, settings);
   endfunction
 
-  [param3, f3, cvg3, outp3, result3] = fit3(fun3, paramn3, x, yn, options3, settings, cno, mu, beta, a3, da3, sig3, u3, eta, nu, alpha, lcc, sig1, q, cH, cN, cO, cS, dan, k, const1, const2, useQ, b, useA, density, sampleThickness, transmission, absorptionCorrection, useP, polarizedBeam, polarizationDegree, useGradient, g, useCorrAutoColl, par_r, par_delta, par_l, radiation, wavelength, s, coh, inc, fitPath, id);
+  [param3, f3, cvg3, outp3, result3] = fit3(fun3, paramn3, x, yn, options3, settings, cno, mu, beta, a3, da3, sig3, u3, eta, nu, alpha, lcc, sig1, q, cH, cN, cO, cS, dan, k, const1, const2, useQ, b, useA, density, sampleThickness, transmission, absorptionCorrection, useP, polarizedBeam, polarizationDegree, useGradient, g, useCorrAutoColl, par_r, par_delta, par_l, radiation, wavelength, s, coh, inc);
   paramn3 = param3;
 
   q      = param3(1)
@@ -689,7 +689,6 @@ else
 
   saveFiles("3-normalization", x, yFit3, yn, cno, mu, beta, a3, da3, sig3, u3, eta, nu, alpha, lcc, sig1, q, cH, cN, cO, cS, dan, k, const1, const2, useQ, b, useA, density, sampleThickness, transmission, absorptionCorrection, useP, polarizedBeam, polarizationDegree, useGradient, g, useCorrAutoColl, par_r, par_delta, par_l, radiation, wavelength, s, coh, inc, fitPath, id);
 
-
   #Interlayer
   fun1 = @(a, x) (fun(cno, a(1), a(2), a(3), a(4), a(5), u3, a(6), nu, alpha, lcc, sig1, q, cH, cN, cO, cS, dan, k, const1, const2, useQ, b, useA, density, sampleThickness, transmission, absorptionCorrection, useP, polarizedBeam, polarizationDegree, useGradient, g, useCorrAutoColl, par_r, par_delta, par_l, radiation, wavelength, x, coh, inc));
   "\n\n\n Interlayer"
@@ -698,7 +697,7 @@ else
    maxerrorCount = 10;
     result1.covp = 100*eye(length(param1));
     try
-      result1 = curvefit_stat(@(a) (fun(cno, a(1), a(2), a(3), a(4), a(5), u3, a(6), nu, alpha, lcc, sig1, q, cH, cN, cO, cS, dan, k, const1, const2, useQ, b, useA, density, sampleThickness, transmission, absorptionCorrection, useP, polarizedBeam, polarizationDegree, useGradient, g, useCorrAutoColl, par_r, par_delta, par_l, radiation, wavelength, x, coh, inc)), param1, x, yn, settings);
+      result1 = curvefit_stat(@(a, x) (fun(cno, a(1), a(2), a(3), a(4), a(5), u3, a(6), nu, alpha, lcc, sig1, q, cH, cN, cO, cS, dan, k, const1, const2, useQ, b, useA, density, sampleThickness, transmission, absorptionCorrection, useP, polarizedBeam, polarizationDegree, useGradient, g, useCorrAutoColl, par_r, par_delta, par_l, radiation, wavelength, x, coh, inc)), param1, x, yn, settings);
     catch
       lasterror.message
       if errorCount < maxerrorCount
@@ -722,7 +721,7 @@ else
     result1 = result1fun(cno, mu, beta, a3, da3, sig3, u3, eta, nu, alpha, lcc, sig1, q, cH, cN, cO, cS, dan, k, const1, const2, useQ, b, useA, density, sampleThickness, transmission, absorptionCorrection, useP, polarizedBeam, polarizationDegree, useGradient, g, useCorrAutoColl, par_r, par_delta, par_l, radiation, wavelength, s, coh, inc, x, param1, yn, settings);
   endfunction
 
-  [param1, f1, cvg1, outp1, result1] = fit1(fun1, paramn1, x, yn, options1, settings, cno, mu, beta, a3, da3, sig3, u3, eta, nu, alpha, lcc, sig1, q, cH, cN, cO, cS, dan, k, const1, const2, useQ, b, useA, density, sampleThickness, transmission, absorptionCorrection, useP, polarizedBeam, polarizationDegree, useGradient, g, useCorrAutoColl, par_r, par_delta, par_l, radiation, wavelength, s, coh, inc, fitPath, id);
+  [param1, f1, cvg1, outp1, result1] = fit1(fun1, paramn1, x, yn, options1, settings, cno, mu, beta, a3, da3, sig3, u3, eta, nu, alpha, lcc, sig1, q, cH, cN, cO, cS, dan, k, const1, const2, useQ, b, useA, density, sampleThickness, transmission, absorptionCorrection, useP, polarizedBeam, polarizationDegree, useGradient, g, useCorrAutoColl, par_r, par_delta, par_l, radiation, wavelength, s, coh, inc);
   paramn1 = param1;
 
   mu   = param1(1)
@@ -774,7 +773,7 @@ else
    maxerrorCount = 10;
     result2.covp = 100*eye(length(param2));
     try
-      result2 = curvefit_stat(@(a) (fun(cno, mu, beta, a3, da3, sig3, u3, eta, a(1), a(2), lcc, a(3), q, cH, cN, cO, cS, dan, k, const1, const2, useQ, b, useA, density, sampleThickness, transmission, absorptionCorrection, useP, polarizedBeam, polarizationDegree, useGradient, g, useCorrAutoColl, par_r, par_delta, par_l, radiation, wavelength, x, coh, inc)), param2, x, yn, settings);
+      result2 = curvefit_stat(@(a, x) (fun(cno, mu, beta, a3, da3, sig3, u3, eta, a(1), a(2), lcc, a(3), q, cH, cN, cO, cS, dan, k, const1, const2, useQ, b, useA, density, sampleThickness, transmission, absorptionCorrection, useP, polarizedBeam, polarizationDegree, useGradient, g, useCorrAutoColl, par_r, par_delta, par_l, radiation, wavelength, x, coh, inc)), param2, x, yn, settings);
     catch
       lasterror.message
       if errorCount < maxerrorCount
@@ -798,7 +797,7 @@ else
     result2 = result2fun(cno, mu, beta, a3, da3, sig3, u3, eta, nu, alpha, lcc, sig1, q, cH, cN, cO, cS, dan, k, const1, const2, useQ, b, useA, density, sampleThickness, transmission, absorptionCorrection, useP, polarizedBeam, polarizationDegree, useGradient, g, useCorrAutoColl, par_r, par_delta, par_l, radiation, wavelength, s, coh, inc, x, param2, yn, settings);
    endfunction
    
-  [param2, f2, cvg2, outp2, result2] = fit2(fun2, paramn2, x, yn, options2, settings, cno, mu, beta, a3, da3, sig3, u3, eta, nu, alpha, lcc, sig1, q, cH, cN, cO, cS, dan, k, const1, const2, useQ, b, useA, density, sampleThickness, transmission, absorptionCorrection, useP, polarizedBeam, polarizationDegree, useGradient, g, useCorrAutoColl, par_r, par_delta, par_l, radiation, wavelength, s, coh, inc, fitPath, id);
+  [param2, f2, cvg2, outp2, result2] = fit2(fun2, paramn2, x, yn, options2, settings, cno, mu, beta, a3, da3, sig3, u3, eta, nu, alpha, lcc, sig1, q, cH, cN, cO, cS, dan, k, const1, const2, useQ, b, useA, density, sampleThickness, transmission, absorptionCorrection, useP, polarizedBeam, polarizationDegree, useGradient, g, useCorrAutoColl, par_r, par_delta, par_l, radiation, wavelength, s, coh, inc);
   paramn2 = param2;
 
   nu    = param2(1)
@@ -838,11 +837,10 @@ else
 
   saveFiles("2-intralayer", x, yFit2, yn, cno, mu, beta, a3, da3, sig3, u3, eta, nu, alpha, lcc, sig1, q, cH, cN, cO, cS, dan, k, const1, const2, useQ, b, useA, density, sampleThickness, transmission, absorptionCorrection, useP, polarizedBeam, polarizationDegree, useGradient, g, useCorrAutoColl, par_r, par_delta, par_l, radiation, wavelength, s, coh, inc, fitPath, id);
 
-
   #Normalisierung
   #{
   "\n\n\n Normalization"
-  [param3, f3, cvg3, outp3, result3] = fit3(fun3, paramn3, x, yn, options3, settings, cno, mu, beta, a3, da3, sig3, u3, eta, nu, alpha, lcc, sig1, q, cH, cN, cO, cS, dan, k, const1, const2, useQ, b, useA, density, sampleThickness, transmission, absorptionCorrection, useP, polarizedBeam, polarizationDegree, useGradient, g, useCorrAutoColl, par_r, par_delta, par_l, radiation, wavelength, s, coh, inc, fitPath, id);
+  [param3, f3, cvg3, outp3, result3] = fit3(fun3, paramn3, x, yn, options3, settings, cno, mu, beta, a3, da3, sig3, u3, eta, nu, alpha, lcc, sig1, q, cH, cN, cO, cS, dan, k, const1, const2, useQ, b, useA, density, sampleThickness, transmission, absorptionCorrection, useP, polarizedBeam, polarizationDegree, useGradient, g, useCorrAutoColl, par_r, par_delta, par_l, radiation, wavelength, s, coh, inc);
   paramn3 = param3;
 
   q      = param3(1)
@@ -894,7 +892,7 @@ else
    maxerrorCount = 10;
     result4.covp = 100*eye(length(param4));
     try
-      result4 = curvefit_stat(@(a) (fun(cno, mu, beta, a3, da3, sig3, u3, eta, nu, alpha, a(1), sig1, q, cH, cN, cO, cS, dan, k, const1, const2, useQ, b, useA, density, sampleThickness, transmission, absorptionCorrection, useP, polarizedBeam, polarizationDegree, useGradient, g, useCorrAutoColl, par_r, par_delta, par_l, radiation, wavelength, x, coh, inc)), param4, x, yn, settings);     
+      result4 = curvefit_stat(@(a, x) (fun(cno, mu, beta, a3, da3, sig3, u3, eta, nu, alpha, a(1), sig1, q, cH, cN, cO, cS, dan, k, const1, const2, useQ, b, useA, density, sampleThickness, transmission, absorptionCorrection, useP, polarizedBeam, polarizationDegree, useGradient, g, useCorrAutoColl, par_r, par_delta, par_l, radiation, wavelength, x, coh, inc)), param4, x, yn, settings);     
     catch
       lasterror.message
       if errorCount < maxerrorCount
@@ -918,7 +916,7 @@ else
     result4 = result4fun(cno, mu, beta, a3, da3, sig3, u3, eta, nu, alpha, lcc, sig1, q, cH, cN, cO, cS, dan, k, const1, const2, useQ, b, useA, density, sampleThickness, transmission, absorptionCorrection, useP, polarizedBeam, polarizationDegree, useGradient, g, useCorrAutoColl, par_r, par_delta, par_l, radiation, wavelength, s, coh, inc, x, param4, yn, settings);
   endfunction
 
-  [param4, f4, cvg4, outp4, result4] = fit4(fun4, paramn4, x, yn, options4, settings, cno, mu, beta, a3, da3, sig3, u3, eta, nu, alpha, lcc, sig1, q, cH, cN, cO, cS, dan, k, const1, const2, useQ, b, useA, density, sampleThickness, transmission, absorptionCorrection, useP, polarizedBeam, polarizationDegree, useGradient, g, useCorrAutoColl, par_r, par_delta, par_l, radiation, wavelength, s, coh, inc, fitPath, id);
+  [param4, f4, cvg4, outp4, result4] = fit4(fun4, paramn4, x, yn, options4, settings, cno, mu, beta, a3, da3, sig3, u3, eta, nu, alpha, lcc, sig1, q, cH, cN, cO, cS, dan, k, const1, const2, useQ, b, useA, density, sampleThickness, transmission, absorptionCorrection, useP, polarizedBeam, polarizationDegree, useGradient, g, useCorrAutoColl, par_r, par_delta, par_l, radiation, wavelength, s, coh, inc);
   paramn4 = param4;
 
   lcc = param4(1)
@@ -966,7 +964,7 @@ else
    maxerrorCount = 10;
     result5.covp = 100*eye(length(param5));
     try
-      result5 = curvefit_stat(@(a) (fun(cno, a(1), a(2), a(3), a(4), a(5), u3, a(6), a(7), a(8), a(9), a(10), a(11), cH, cN, cO, cS, a(12), a(13), a(14), a(15), useQ, b, useA, density, sampleThickness, transmission, absorptionCorrection, useP, polarizedBeam, polarizationDegree, useGradient, a(16), useCorrAutoColl, par_r, par_delta, par_l, radiation, wavelength, x, coh, inc)), param5, x, yn, settings);
+      result5 = curvefit_stat(@(a, x) (fun(cno, a(1), a(2), a(3), a(4), a(5), u3, a(6), a(7), a(8), a(9), a(10), a(11), cH, cN, cO, cS, a(12), a(13), a(14), a(15), useQ, b, useA, density, sampleThickness, transmission, absorptionCorrection, useP, polarizedBeam, polarizationDegree, useGradient, a(16), useCorrAutoColl, par_r, par_delta, par_l, radiation, wavelength, x, coh, inc)), param5, x, yn, settings);
     catch
       lasterror.message
       if errorCount < maxerrorCount
@@ -1454,4 +1452,4 @@ timeEnd = time();
 
 duration = timeEnd-timeStart
 
-#Copyright (C) 2021 Oliver Osswald
+#Copyright (C) 2023 Oliver Osswald

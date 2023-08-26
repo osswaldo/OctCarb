@@ -434,4 +434,4 @@ pkg install '<*path_to_file*>/statistics-<*version*>.tar.gz'
 pkg install '<*path_to_file*>/optim-<*version*>.tar.gz'
 ```
 
-Copyright (C) 2022 Oliver Osswald
+Copyright (C) 2023 Oliver Osswald

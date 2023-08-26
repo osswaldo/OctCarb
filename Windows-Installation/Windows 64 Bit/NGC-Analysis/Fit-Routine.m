@@ -1554,4 +1554,4 @@ timeEnd = time();
 
 duration = timeEnd-timeStart
 
-#Copyright (C) 2021 Oliver Osswald
+#Copyright (C) 2023 Oliver Osswald
