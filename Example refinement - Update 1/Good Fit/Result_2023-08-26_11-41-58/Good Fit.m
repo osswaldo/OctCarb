@@ -15,22 +15,22 @@ timeStart = time();
 
 #Initial values for fitting. k & const1 should be roughly adjusted manually. nu depends on the experiment, for Cu-radiation, 4 is sufficient. Mostly, g can be 0 (switch with useGradient = true/false).
 u3 = 0; #Generally not refined and not outputted
-mu     = 4;
-beta   = 0.5;
-a3     = 3.5;
-da3    = 0.4;
+mu     = 8.2;
+beta   = 0.9;
+a3     = 3.47;
+da3    = 0.8;
 a3min  = a3-da3;
-sig3   = 0.25;
+sig3   = 0.35;
 eta    = 1;
 nu     = 4;
-alpha  = 0.2;
+alpha  = 0.18;
 lcc    = 1.412;
-sig1   = 0.1;
+sig1   = 0.08;
 q      = 0;
 dan    = 0;
-k      = 500;
-const1 = 0;
-const2 = 0;
+k      = 800;
+const1 = 1900;
+const2 = -0.1;
 
 #Switch for usage of gradient g and concentrations of impurities
 useGradient = false;
@@ -50,8 +50,8 @@ plotOnly = false;
 global shouldPlot = true;
 
 #Name of the series and id of the sample
-name = "Test-Data";
-sampleId = "Fit";
+name = "Good Fit";
+sampleId = "Result";
 
 #Filename and path the currently used file, it must also contain iObs.oct. The path must be changed twice.
 #The paths are read programmatically. However, they can also be set manually. Hence, the '/' symbol should be used in the paths
@@ -61,7 +61,7 @@ filename = strcat(file, ext, ".m") # path is read programmatically
 cd(path);
 
 #Measurement data file
-measFile = '<path_to_measurement_file>';
+measFile = '.\Good Fit\Good Fit example data.xy';
 
 #Corrections for Wide-Angle Neutron Scattering (WANS) experiments, only meaningful, if radiation = 1 (means neutrons scattering)
 neutronCorrection = false;
@@ -94,7 +94,7 @@ nStart = 0;
 nEnd = 0;
 
 #Calculate only every n point
-nSkip = 1;
+nSkip = 10;
 
 #Shifting the raw data up/down
 nUp = 0;
@@ -148,9 +148,9 @@ par_l           = 5;	    #Irradiated length in cm
 
 #Lines below should be left as they are
 # # # # #
- # # # # 
+ # # # #
 # # # # #
- # # # # 
+ # # # #
 # # # # #
 #Lines below should be left as they are
 
@@ -252,18 +252,18 @@ function SofQ = placzekCorrection(x, y, minX = 0, maxX = 100)
   K = 2;
   EPSH = 1e-100000;
   MAXIT = 50;
-  
-  xnew = xnew;  
+
+  xnew = xnew;
   ynew = ynew;
-  
+
   A = polyfit(xnew, ynew, M);
-  
+
   fy = polyval(A, xnew);
-  
+
   fit = y - fy;
-  
+
   minimalValue = min(fit);
-  
+
   #Calculation SofQ and adding the minimal value of "SofQ" to prevent negative values
   SofQ = y - fy + 1 - minimalValue + 10;
 endfunction
@@ -275,31 +275,31 @@ function SofQ = lorgaunCorrection(x, y, minX = 0, maxX = 100)
       ynew(i) = y(i);
     endif
   endfor
-  
+
   #options.AutoScaling = autoscaling;
   #options.FunValCheck = funValCheck;
   options.MaxIter = 50;
   options.TolFun = 1e-1000;
-  
+
   #Normalization k, width w, ration eta
   options.lbound = [0.01; 0.1; 0];
   options.ubound = [1e10; 100; 1];
-  
+
   pin = [50000; 15; 0.5];
-  
+
   #Normalization k, width w, middle, x0, shift y0, ration eta
   f = @ (p, x) (pseudoVoigt(x, p(1), p(2), 0, 0, p(3)));
-  
+
   [p, fy, cvg, outp] = nonlin_curvefit(f, pin, xnew, ynew, options);
-    
+
   fy = fy;
   p = p
   cvg = cvg
-  
+
   fit = y - fy;
-  
+
   minimalValue = min(fit);
-  
+
   #Calculation SofQ and adding the minimal value of "SofQ" to prevent negative values
   SofQ = y - fy + 1 - minimalValue + 10;
 endfunction
@@ -322,7 +322,7 @@ if weight == "normal"
 else
   for i=1:length(yn)
     wtWeight(i) = 1/(yn(i)+10);
-	    endfor
+  endfor
 endif
 
 #OutputPath
@@ -345,10 +345,6 @@ paramn4 = [lcc];
 lb5 = [lb1; lb2(1); lb2(2); lb4; lb2(3); lb3];
 ub5 = [ub1; ub2(1); ub2(2); ub4; ub2(3); ub3];
 
-#Bounds for last step (order!)
-lb6 = [lb1; lb2(1); lb2(2); lb4; lb2(3)];
-ub6 = [ub1; ub2(1); ub2(2); ub4; ub2(3)];
-
 #Typical x-value (scattering vector s)
 typicalX = 1;
 
@@ -363,7 +359,7 @@ function [stop, info] = outfun(p, optimValues, state)
   x = optimValues.model_x;
   y = optimValues.model_y;
   observations = optimValues.observations;
-  
+
   if shouldPlot == true
     plot99 = figure(99, 'name', 'Current refinement step');
     plot(x, ynglobal, ".k;Data points;", "markersize", 10, x, y, strcat({"r;Fit at "},  asctime (localtime (time)), ";"), "LineWidth", 3);
@@ -373,33 +369,33 @@ function [stop, info] = outfun(p, optimValues, state)
   endif
 
   clear output;
-  
+
   output(1, 1) = cellstr("results");
   for i=1:length(p)
     output(i+1, 1) = p(i);
   endfor
-  
+
   output(1, 3) = cellstr("q");
   output(1, 4) = cellstr("I(q)");
   output(1, 5) = cellstr("Fit");
-  
+
   for i=1:length(x)
     output(i+1, 3) = x(i);
     output(i+1, 4) = observations(i);
     output(i+1, 5) = y(i);
   endfor
-  
+
   global fitPath;
   global id;
-    
+
   path = strcat(fitPath, "/output_", id, "_", mat2str(localtime(time).year+1900), "-", mat2str(localtime(time).mon+1), "-", mat2str(localtime(time).mday), "_", mat2str(localtime(time).hour), "-", mat2str(localtime(time).min), "-", mat2str(localtime(time).sec), ".csv");
-  
+
   cell2csv(path, output, ";");
 endfunction
 
-function saveFiles(name, x, y, observations, cno, mu, beta, a3, da3, sig3, u3, eta, nu, alpha, lcc, sig1, q, cH, cN, cO, cS, dan, k, const1, const2, useQ, b, useA, density, sampleThickness, transmission, absorptionCorrection, useP, polarizedBeam, polarizationDegree, useGradient, g, useCorrAutoColl, par_r, par_delta, par_l, radiation, wavelength, s, coh, inc, fitPath, id) 
+function saveFiles(name, x, y, observations, cno, mu, beta, a3, da3, sig3, u3, eta, nu, alpha, lcc, sig1, q, cH, cN, cO, cS, dan, k, const1, const2, useQ, b, useA, density, sampleThickness, transmission, absorptionCorrection, useP, polarizedBeam, polarizationDegree, useGradient, g, useCorrAutoColl, par_r, par_delta, par_l, radiation, wavelength, s, coh, inc, fitPath, id)
   a3min = a3-da3;
-  
+
   La    = (nu+1)/alpha;
   lm    = nu/alpha;
   kapa  = 1/nu;
@@ -410,7 +406,7 @@ function saveFiles(name, x, y, observations, cno, mu, beta, a3, da3, sig3, u3, e
   N     = (mu+1)/beta;
 
   clear output;
-  
+
   output(1, 1) = cellstr("Parameter");
   output(1, 2) = "Value";
 
@@ -479,7 +475,7 @@ function saveFiles(name, x, y, observations, cno, mu, beta, a3, da3, sig3, u3, e
 
   output(23, 1) = cellstr("kapa");
   output(23, 2) = kapa;
-  
+
   output(24, 1) = cellstr("Nm");
   output(24, 2) = Nm;
 
@@ -491,17 +487,17 @@ function saveFiles(name, x, y, observations, cno, mu, beta, a3, da3, sig3, u3, e
 
   output(27, 1) = cellstr("kapc");
   output(27, 2) = kapc;
-  
+
   output(1, 4) = cellstr("s");
   output(1, 5) = cellstr("iObs(s)");
   output(1, 6) = cellstr("Fit");
-  
+
   for i=1:length(x)
     output(i+1, 4) = x(i);
     output(i+1, 5) = observations(i);
     output(i+1, 6) = y(i);
   endfor
-  
+
   cell2csv(strcat(fitPath, "/output_", id, "_", name, ".csv"), output, ";");
 
   filename = strcat(fitPath, "/output_", id, "_", name, ".txt");
@@ -521,9 +517,9 @@ options1.weights = wtWeight;
 options1.TypicalX = typicalX;
 options1.user_interaction = @outfun;
 
-#options1.inequc = ; Additional constraints: Further inequality constraints. Cell-array containing up to four entries, two entries for linear inequality constraints and/or one or two entries for general inequality constraints. Either linear or general constraints may be the first entries, but the two entries for linear constraints must be adjacent and, if two entries are given for general constraints, they also must be adjacent. The two entries for linear constraints are a matrix (say m) and a vector (say v), specifying linear inequality constraints of the form m.' * parameters + v >= 0. The first entry for general constraints must be a differentiable column-vector valued function (say h), specifying general inequality constraints of the form h (p[, idx]) >= 0; p is the column vector of optimized parameters and the optional argument idx is a logical index. h has to return the values of all constraints if idx is not given. It may choose to return only the indexed constraints if idx is given (so computation of the other constraints can be spared); in this case, the additional setting f_inequc_idx has to be set to true. In gradient determination, this function may be called with an informational third argument, whose content depends on the function for gradient determination. If a second entry for general inequality constraints is given, it must be a function computing the jacobian of the constraints with respect to the parameters. For this function, the description of the setting dfdp, see dfdp, applies, with 2 exceptions: 1) it is called with 3 arguments since it has an additional argument idx, a logical index, at second position, indicating which rows of the jacobian must be returned (if the function chooses to return only indexed rows, the additional setting df_inequc_idx has to be set to true). 2) the default jacobian function calls h with 3 arguments, since the argument idx is also supplied. Note that specifying linear constraints as general constraints will generally waste performance, even if further, non-linear, general constraints are also specified. 
-#options1.equc = ; Equality constraints. Specified the same way as inequality constraints (see inequc above). 
-#options1.dfdp = ; Function computing the Jacobian of the residuals with respect to the parameters, assuming residuals are reshaped to a column vector. Default: real finite differences. Will be called with the column vector of parameters and an informational structure as arguments. If dfdp was specified by the user, the informational structure has the fields f: value of residuals for current parameters, reshaped to a column vector, fixed: logical vector indicating which parameters are not optimized, so these partial derivatives need not be computed and can be set to zero, diffp, diff_onesided, lbound, ubound: identical to the user settings of this name, plabels: 1-dimensional cell-array of column-cell-arrays, each column with labels for all parameters; the first column contains the numerical indices of the parameters; the second and third columns, present for structure based parameter handling, see Parameter structures, contain the names of the parameters and the subindices of the parameters, see Non-scalar parameters, respectively. The default jacobian function will call the model function with the second argument set with fields f: as the f passed to the jacobian function, plabels: cell-array of 1x1 cell-arrays with the entries of the column-cell-arrays of plabels as passed to the jacobian function corresponding to current parameter, side: 0 for one-sided interval, 1 or 2, respectively, for the sides of a two-sided interval, and parallel: logical scalar indicating parallel computation of partial derivatives. This information can be useful if the model function can omit some computations depending on the currently computed partial derivative. 
+#options1.inequc = ; Additional constraints: Further inequality constraints. Cell-array containing up to four entries, two entries for linear inequality constraints and/or one or two entries for general inequality constraints. Either linear or general constraints may be the first entries, but the two entries for linear constraints must be adjacent and, if two entries are given for general constraints, they also must be adjacent. The two entries for linear constraints are a matrix (say m) and a vector (say v), specifying linear inequality constraints of the form m.' * parameters + v >= 0. The first entry for general constraints must be a differentiable column-vector valued function (say h), specifying general inequality constraints of the form h (p[, idx]) >= 0; p is the column vector of optimized parameters and the optional argument idx is a logical index. h has to return the values of all constraints if idx is not given. It may choose to return only the indexed constraints if idx is given (so computation of the other constraints can be spared); in this case, the additional setting f_inequc_idx has to be set to true. In gradient determination, this function may be called with an informational third argument, whose content depends on the function for gradient determination. If a second entry for general inequality constraints is given, it must be a function computing the jacobian of the constraints with respect to the parameters. For this function, the description of the setting dfdp, see dfdp, applies, with 2 exceptions: 1) it is called with 3 arguments since it has an additional argument idx, a logical index, at second position, indicating which rows of the jacobian must be returned (if the function chooses to return only indexed rows, the additional setting df_inequc_idx has to be set to true). 2) the default jacobian function calls h with 3 arguments, since the argument idx is also supplied. Note that specifying linear constraints as general constraints will generally waste performance, even if further, non-linear, general constraints are also specified.
+#options1.equc = ; Equality constraints. Specified the same way as inequality constraints (see inequc above).
+#options1.dfdp = ; Function computing the Jacobian of the residuals with respect to the parameters, assuming residuals are reshaped to a column vector. Default: real finite differences. Will be called with the column vector of parameters and an informational structure as arguments. If dfdp was specified by the user, the informational structure has the fields f: value of residuals for current parameters, reshaped to a column vector, fixed: logical vector indicating which parameters are not optimized, so these partial derivatives need not be computed and can be set to zero, diffp, diff_onesided, lbound, ubound: identical to the user settings of this name, plabels: 1-dimensional cell-array of column-cell-arrays, each column with labels for all parameters; the first column contains the numerical indices of the parameters; the second and third columns, present for structure based parameter handling, see Parameter structures, contain the names of the parameters and the subindices of the parameters, see Non-scalar parameters, respectively. The default jacobian function will call the model function with the second argument set with fields f: as the f passed to the jacobian function, plabels: cell-array of 1x1 cell-arrays with the entries of the column-cell-arrays of plabels as passed to the jacobian function corresponding to current parameter, side: 0 for one-sided interval, 1 or 2, respectively, for the sides of a two-sided interval, and parallel: logical scalar indicating parallel computation of partial derivatives. This information can be useful if the model function can omit some computations depending on the currently computed partial derivative.
 
 options2.AutoScaling = autoscaling;
 options2.FunValCheck = funValCheck;
@@ -565,17 +561,6 @@ options5.weights = wtWeight;
 options5.TypicalX = typicalX;
 options5.user_interaction = @outfun;
 
-options6.AutoScaling = autoscaling;
-options6.FunValCheck = funValCheck;
-#options6.MaxIter = maxIter;
-options6.MaxIter = 1;
-options6.TolFun = tolFun;
-options6.lbound = lb6;
-options6.ubound = ub6;
-options6.weights = wtWeight;
-options6.TypicalX = typicalX;
-options6.user_interaction = @outfun;
-
 #Load optim package
 pkg load optim;
 
@@ -606,14 +591,14 @@ if plotOnly == true
     output(i+1, 1) = x(i);
     output(i+1, 2) = yStart(i);
   endfor
-  
+
   cell2csv(strcat(fitPath, "/output_", id, "_", "0-plotOnly", ".csv"), output, ";");
 
   saveFiles("0-plotOnly", x, yStart, yn, cno, mu, beta, a3, da3, sig3, u3, eta, nu, alpha, lcc, sig1, q, cH, cN, cO, cS, dan, k, const1, const2, useQ, b, useA, density, sampleThickness, transmission, absorptionCorrection, useP, polarizedBeam, polarizationDegree, useGradient, g, useCorrAutoColl, par_r, par_delta, par_l, radiation, wavelength, s, coh, inc, fitPath, id);
-  
+
   saveas(plot0, (strcat(fitPath, "/0_plotOnly_", id, ".png")));
 else
-  #Text output 
+  #Text output
   function y = flag(flag)
     if flag == -1
       y = "Canceled.";
@@ -645,7 +630,7 @@ else
       endif
     end_try_catch
   endfunction
-    
+
   function [param3, f3, cvg3, outp3, result3] = fit3(fun3, paramn3, x, yn, options3, settings, cno, mu, beta, a3, da3, sig3, u3, eta, nu, alpha, lcc, sig1, q, cH, cN, cO, cS, dan, k, const1, const2, useQ, b, useA, density, sampleThickness, transmission, absorptionCorrection, useP, polarizedBeam, polarizationDegree, useGradient, g, useCorrAutoColl, par_r, par_delta, par_l, radiation, wavelength, s, coh, inc, errorCount = 1)
     maxerrorCount = 10;
     try
@@ -684,7 +669,7 @@ else
   stdabw3	= stdabw3';
 
   yFit3 = fun(cno, mu, beta, a3, da3, sig3, u3, eta, nu, alpha, lcc, sig1, q, cH, cN, cO, cS, dan, k, const1, const2, useQ, b, useA, density, sampleThickness, transmission, absorptionCorrection, useP, polarizedBeam, polarizationDegree, useGradient, g, useCorrAutoColl, par_r, par_delta, par_l, radiation, wavelength, x, coh, inc);
- 
+
   if shouldPlot == true
     plot3 = figure(3, 'name', 'Normalization');
     plot(x, yn, ".k;Data points;", "markersize", 10, x, yFit3, "r;Fit3;", "LineWidth", 3);
@@ -699,7 +684,7 @@ else
     output(i+1, 1) = x(i);
     output(i+1, 2) = yFit3(i);
   endfor
-    
+
   cell2csv(strcat(fitPath, "/output_", id, "_", "3-normalization", ".csv"), output, ";");
 
   saveFiles("3-normalization", x, yFit3, yn, cno, mu, beta, a3, da3, sig3, u3, eta, nu, alpha, lcc, sig1, q, cH, cN, cO, cS, dan, k, const1, const2, useQ, b, useA, density, sampleThickness, transmission, absorptionCorrection, useP, polarizedBeam, polarizationDegree, useGradient, g, useCorrAutoColl, par_r, par_delta, par_l, radiation, wavelength, s, coh, inc, fitPath, id);
@@ -720,7 +705,7 @@ else
       endif
     end_try_catch
   endfunction
-    
+
   function [param1, f1, cvg1, outp1, result1] = fit1(fun1, paramn1, x, yn, options1, settings, cno, mu, beta, a3, da3, sig3, u3, eta, nu, alpha, lcc, sig1, q, cH, cN, cO, cS, dan, k, const1, const2, useQ, b, useA, density, sampleThickness, transmission, absorptionCorrection, useP, polarizedBeam, polarizationDegree, useGradient, g, useCorrAutoColl, par_r, par_delta, par_l, radiation, wavelength, s, coh, inc, errorCount = 1)
     maxerrorCount = 10;
     try
@@ -759,7 +744,7 @@ else
   mat1 = mat1
 
   yFit1 = fun(cno, mu, beta, a3, da3, sig3, u3, eta, nu, alpha, lcc, sig1, q, cH, cN, cO, cS, dan, k, const1, const2, useQ, b, useA, density, sampleThickness, transmission, absorptionCorrection, useP, polarizedBeam, polarizationDegree, useGradient, g, useCorrAutoColl, par_r, par_delta, par_l, radiation, wavelength, x, coh, inc);
-  
+
   if shouldPlot == true
     plot1 = figure(1, 'name', 'Interlayer');
     plot(x, yn, ".k;Data points;", "markersize", 10, x, yFit1, "r;Fit1;", "LineWidth", 3);
@@ -774,7 +759,7 @@ else
     output(i+1, 1) = x(i);
     output(i+1, 2) = yFit1(i);
   endfor
-  
+
   cell2csv(strcat(fitPath, "/output_", id, "_", "1-interlayer", ".csv"), output, ";");
 
   saveFiles("1-interlayer", x, yFit1, yn, cno, mu, beta, a3, da3, sig3, u3, eta, nu, alpha, lcc, sig1, q, cH, cN, cO, cS, dan, k, const1, const2, useQ, b, useA, density, sampleThickness, transmission, absorptionCorrection, useP, polarizedBeam, polarizationDegree, useGradient, g, useCorrAutoColl, par_r, par_delta, par_l, radiation, wavelength, s, coh, inc, fitPath, id);
@@ -796,7 +781,7 @@ else
       endif
     end_try_catch
   endfunction
-    
+
   function [param2, f2, cvg2, outp2, result2] = fit2(fun2, paramn2, x, yn, options2, settings, cno, mu, beta, a3, da3, sig3, u3, eta, nu, alpha, lcc, sig1, q, cH, cN, cO, cS, dan, k, const1, const2, useQ, b, useA, density, sampleThickness, transmission, absorptionCorrection, useP, polarizedBeam, polarizationDegree, useGradient, g, useCorrAutoColl, par_r, par_delta, par_l, radiation, wavelength, s, coh, inc, errorCount = 1)
     maxerrorCount = 10;
     try
@@ -811,7 +796,7 @@ else
     end_try_catch
     result2 = result2fun(cno, mu, beta, a3, da3, sig3, u3, eta, nu, alpha, lcc, sig1, q, cH, cN, cO, cS, dan, k, const1, const2, useQ, b, useA, density, sampleThickness, transmission, absorptionCorrection, useP, polarizedBeam, polarizationDegree, useGradient, g, useCorrAutoColl, par_r, par_delta, par_l, radiation, wavelength, s, coh, inc, x, param2, yn, settings);
    endfunction
-   
+
   [param2, f2, cvg2, outp2, result2] = fit2(fun2, paramn2, x, yn, options2, settings, cno, mu, beta, a3, da3, sig3, u3, eta, nu, alpha, lcc, sig1, q, cH, cN, cO, cS, dan, k, const1, const2, useQ, b, useA, density, sampleThickness, transmission, absorptionCorrection, useP, polarizedBeam, polarizationDegree, useGradient, g, useCorrAutoColl, par_r, par_delta, par_l, radiation, wavelength, s, coh, inc);
   paramn2 = param2;
 
@@ -832,7 +817,7 @@ else
   mat2 = mat2
 
   yFit2 = fun(cno, mu, beta, a3, da3, sig3, u3, eta, nu, alpha, lcc, sig1, q, cH, cN, cO, cS, dan, k, const1, const2, useQ, b, useA, density, sampleThickness, transmission, absorptionCorrection, useP, polarizedBeam, polarizationDegree, useGradient, g, useCorrAutoColl, par_r, par_delta, par_l, radiation, wavelength, x, coh, inc);
-  
+
   if shouldPlot == true
     plot2 = figure(2, 'name', 'Intralayer');
     plot(x, yn, ".k;Data points;", "markersize", 10, x, yFit2, "r;Fit2;", "LineWidth", 3);
@@ -847,7 +832,7 @@ else
     output(i+1, 1) = x(i);
     output(i+1, 2) = yFit2(i);
   endfor
-  
+
   cell2csv(strcat(fitPath, "/output_", id, "_", "2-intralayer", ".csv"), output, ";");
 
   saveFiles("2-intralayer", x, yFit2, yn, cno, mu, beta, a3, da3, sig3, u3, eta, nu, alpha, lcc, sig1, q, cH, cN, cO, cS, dan, k, const1, const2, useQ, b, useA, density, sampleThickness, transmission, absorptionCorrection, useP, polarizedBeam, polarizationDegree, useGradient, g, useCorrAutoColl, par_r, par_delta, par_l, radiation, wavelength, s, coh, inc, fitPath, id);
@@ -878,7 +863,7 @@ else
   stdabw3 = stdabw3';
 
   yFit3 = fun(cno, mu, beta, a3, da3, sig3, u3, eta, nu, alpha, lcc, sig1, q, cH, cN, cO, cS, dan, k, const1, const2, useQ, b, useA, density, sampleThickness, transmission, absorptionCorrection, useP, polarizedBeam, polarizationDegree, useGradient, g, useCorrAutoColl, par_r, par_delta, par_l, radiation, wavelength, x, coh, inc);
-  
+
   if shouldPlot == true
     plot3 = figure(3, 'name', 'Normalization');
     plot(x, yn, ".k;Data points;", "markersize", 10, x, yFit3, "r;Fit3;", "LineWidth", 3);
@@ -893,7 +878,7 @@ else
     output(i+1, 1) = x(i);
     output(i+1, 2) = yFit3(i);
   endfor
-  
+
   cell2csv(strcat(fitPath, "/output_", id, "_", "3-normalization", ".csv"), output, ";");
 
   saveFiles("3-normalization", x, yFit3, yn, cno, mu, beta, a3, da3, sig3, u3, eta, nu, alpha, lcc, sig1, q, cH, cN, cO, cS, dan, k, const1, const2, useQ, b, useA, density, sampleThickness, transmission, absorptionCorrection, useP, polarizedBeam, polarizationDegree, useGradient, g, useCorrAutoColl, par_r, par_delta, par_l, radiation, wavelength, s, coh, inc, fitPath, id);
@@ -907,7 +892,7 @@ else
    maxerrorCount = 10;
     result4.covp = 100*eye(length(param4));
     try
-      result4 = curvefit_stat(@(a, x) (fun(cno, mu, beta, a3, da3, sig3, u3, eta, nu, alpha, a(1), sig1, q, cH, cN, cO, cS, dan, k, const1, const2, useQ, b, useA, density, sampleThickness, transmission, absorptionCorrection, useP, polarizedBeam, polarizationDegree, useGradient, g, useCorrAutoColl, par_r, par_delta, par_l, radiation, wavelength, x, coh, inc)), param4, x, yn, settings);     
+      result4 = curvefit_stat(@(a, x) (fun(cno, mu, beta, a3, da3, sig3, u3, eta, nu, alpha, a(1), sig1, q, cH, cN, cO, cS, dan, k, const1, const2, useQ, b, useA, density, sampleThickness, transmission, absorptionCorrection, useP, polarizedBeam, polarizationDegree, useGradient, g, useCorrAutoColl, par_r, par_delta, par_l, radiation, wavelength, x, coh, inc)), param4, x, yn, settings);
     catch
       lasterror.message
       if errorCount < maxerrorCount
@@ -915,7 +900,7 @@ else
       endif
     end_try_catch
   endfunction
-    
+
   function [param4, f4, cvg4, outp4, result4] = fit4(fun4, paramn4, x, yn, options4, settings, cno, mu, beta, a3, da3, sig3, u3, eta, nu, alpha, lcc, sig1, q, cH, cN, cO, cS, dan, k, const1, const2, useQ, b, useA, density, sampleThickness, transmission, absorptionCorrection, useP, polarizedBeam, polarizationDegree, useGradient, g, useCorrAutoColl, par_r, par_delta, par_l, radiation, wavelength, s, coh, inc, errorCount = 1)
     maxerrorCount = 10;
     try
@@ -949,7 +934,7 @@ else
   mat4 = mat4
 
   yFit4 = fun(cno, mu, beta, a3, da3, sig3, u3, eta, nu, alpha, lcc, sig1, q, cH, cN, cO, cS, dan, k, const1, const2, useQ, b, useA, density, sampleThickness, transmission, absorptionCorrection, useP, polarizedBeam, polarizationDegree, useGradient, g, useCorrAutoColl, par_r, par_delta, par_l, radiation, wavelength, x, coh, inc);
-  
+
   if shouldPlot == true
     plot4 = figure(4, 'name', 'lcc');
     plot(x, yn, ".k;Data points;", "markersize", 10, x, yFit4, "r;Fit4;", "LineWidth", 3);
@@ -964,7 +949,7 @@ else
     output(i+1, 1) = x(i);
     output(i+1, 2) = yFit4(i);
   endfor
-  
+
   cell2csv(strcat(fitPath, "/output_", id, "_", "4-lcc", ".csv"), output, ";");
 
   saveFiles("4-lcc", x, yFit4, yn, cno, mu, beta, a3, da3, sig3, u3, eta, nu, alpha, lcc, sig1, q, cH, cN, cO, cS, dan, k, const1, const2, useQ, b, useA, density, sampleThickness, transmission, absorptionCorrection, useP, polarizedBeam, polarizationDegree, useGradient, g, useCorrAutoColl, par_r, par_delta, par_l, radiation, wavelength, s, coh, inc, fitPath, id);
@@ -987,7 +972,7 @@ else
       endif
     end_try_catch
   endfunction
-    
+
   function [param5, f5, cvg5, outp5, result5] = fit5(fun5, paramn5, x, yn, options5, settings, cno, mu, beta, a3, da3, sig3, u3, eta, nu, alpha, lcc, sig1, q, cH, cN, cO, cS, dan, k, const1, const2, useQ, b, useA, density, sampleThickness, transmission, absorptionCorrection, useP, polarizedBeam, polarizationDegree, useGradient, g, useCorrAutoColl, par_r, par_delta, par_l, radiation, wavelength, coh, inc, errorCount = 1)
     maxerrorCount = 10;
     try
@@ -1036,7 +1021,7 @@ else
   mat5 = mat5
 
   yFit5 = fun(cno, mu, beta, a3, da3, sig3, u3, eta, nu, alpha, lcc, sig1, q, cH, cN, cO, cS, dan, k, const1, const2, useQ, b, useA, density, sampleThickness, transmission, absorptionCorrection, useP, polarizedBeam, polarizationDegree, useGradient, g, useCorrAutoColl, par_r, par_delta, par_l, radiation, wavelength, x, coh, inc);
-   
+
   if shouldPlot == true
     plot5 = figure(5, 'name', 'All parameters');
     plot(x, yn, ".k;Data points;", "markersize", 10, x, yFit5, "r;Fit5;", "LineWidth", 3);
@@ -1051,93 +1036,10 @@ else
     output(i+1, 1) = x(i);
     output(i+1, 2) = yFit5(i);
   endfor
-  
+
   cell2csv(strcat(fitPath, "/output_", id, "_", "5-all", ".csv"), output, ";");
 
   saveFiles("5-all", x, yFit5, yn, cno, mu, beta, a3, da3, sig3, u3, eta, nu, alpha, lcc, sig1, q, cH, cN, cO, cS, dan, k, const1, const2, useQ, b, useA, density, sampleThickness, transmission, absorptionCorrection, useP, polarizedBeam, polarizationDegree, useGradient, g, useCorrAutoColl, par_r, par_delta, par_l, radiation, wavelength, s, coh, inc, fitPath, id);
-
-  #All without normalization
-  fun6 = @(a, x) (fun(cno, a(1), a(2), a(3), a(4), a(5), u3, a(6), a(7), a(8), a(9), a(10), q, cH, cN, cO, cS, dan, k, const1, const2, useQ, b, useA, density, sampleThickness, transmission, absorptionCorrection, useP, polarizedBeam, polarizationDegree, useGradient, g, useCorrAutoColl, par_r, par_delta, par_l, radiation, wavelength, s, coh, inc));
-  "\n\n\nAll without normalization"
-  settings.weights = options6.weights;
-  paramn6 = [mu; beta; a3; da3; sig3; eta; nu; alpha; lcc; sig1];
-  function result6 = result6fun(cno, mu, beta, a3, da3, sig3, u3, eta, nu, alpha, lcc, sig1, q, cH, cN, cO, cS, dan, k, const1, const2, useQ, b, useA, density, sampleThickness, transmission, absorptionCorrection, useP, polarizedBeam, polarizationDegree, useGradient, g, useCorrAutoColl, par_r, par_delta, par_l, radiation, wavelength, s, coh, inc, fitPath, id, x, param6, yn, settings, errorCount = 1)
-   maxerrorCount = 10;
-    result6.covp = 100*eye(length(param6));
-    try
-      result6 = curvefit_stat(@(a) (fun(cno, a(1), a(2), a(3), a(4), a(5), u3, a(6), a(7), a(8), a(9), a(10), q, cH, cN, cO, cS, dan, k, const1, const2, useQ, b, useA, density, sampleThickness, transmission, absorptionCorrection, useP, polarizedBeam, polarizationDegree, useGradient, g, useCorrAutoColl, par_r, par_delta, par_l, radiation, wavelength, x, coh, inc)), param6, x, yn, settings)
-    catch
-      lasterror.message
-      if errorCount < maxerrorCount
-        result6 = result6fun(cno, mu, beta, a3, da3, sig3, u3, eta, nu, alpha, lcc, sig1, q, cH, cN, cO, cS, dan, k, const1, const2, useQ, b, useA, density, sampleThickness, transmission, absorptionCorrection, useP, polarizedBeam, polarizationDegree, useGradient, g, useCorrAutoColl, par_r, par_delta, par_l, radiation, wavelength, s, coh, inc, x, param3, yn, settings, errorCount + 1)
-      endif
-    end_try_catch
-  endfunction
-    
-  function [param6, f6, cvg6, outp6, result6] = fit6(fun6, paramn6, x, yn, options6, settings, cno, mu, beta, a3, da3, sig3, u3, eta, nu, alpha, lcc, sig1, q, cH, cN, cO, cS, dan, k, const1, const2, useQ, b, useA, density, sampleThickness, transmission, absorptionCorrection, useP, polarizedBeam, polarizationDegree, useGradient, g, useCorrAutoColl, par_r, par_delta, par_l, radiation, wavelength, s, coh, inc, fitPath, id, errorCount = 1)
-    maxerrorCount = 10;
-    try
-      timeStartFit = time();
-      [param6, f6, cvg6, outp6] = nonlin_curvefit(fun6, paramn6, x, yn, options6);
-      timeEndeFit = time();
-      dauerFit = timeEndeFit - timeStartFit
-    catch
-      lasterror.message
-      if errorCount < maxerrorCount
-        [param6, f6, cvg6, outp6, result6] = fit6(fun6, paramn6, x, yn, options6, settings, cno, mu, beta, a3, da3, sig3, u3, eta, nu, alpha, lcc, sig1, q, cH, cN, cO, cS, dan, k, const1, const2, useQ, b, useA, density, sampleThickness, transmission, absorptionCorrection, useP, polarizedBeam, polarizationDegree, useGradient, g, useCorrAutoColl, par_r, par_delta, par_l, radiation, wavelength, s, coh, inc, fitPath, id, errorCount + 1);
-	    else
-        error("Too many errors when refine")
-      endif
-    end_try_catch
-    result6 = result6fun(cno, mu, beta, a3, da3, sig3, u3, eta, nu, alpha, lcc, sig1, q, cH, cN, cO, cS, dan, k, const1, const2, useQ, b, useA, density, sampleThickness, transmission, absorptionCorrection, useP, polarizedBeam, polarizationDegree, useGradient, g, useCorrAutoColl, par_r, par_delta, par_l, radiation, wavelength, s, coh, inc, fitPath, id, x, param6, yn, settings);
-  endfunction
-
-  [param6, f6, cvg6, outp6, result6] = fit6(fun6, paramn6, x, yn, options6, settings, cno, mu, beta, a3, da3, sig3, u3, eta, nu, alpha, lcc, sig1, q, cH, cN, cO, cS, dan, k, const1, const2, useQ, b, useA, density, sampleThickness, transmission, absorptionCorrection, useP, polarizedBeam, polarizationDegree, useGradient, g, useCorrAutoColl, par_r, par_delta, par_l, radiation, wavelength, s, coh, inc, fitPath, id);
-  paramn6 = param6;
-
-  mu     = param6(1)
-  beta   = param6(2)
-  a3     = param6(3)
-  da3    = param6(4)
-  sig3   = param6(5)
-  eta    = param6(6)
-  nu     = param6(7)
-  alpha  = param6(8)
-  lcc    = param6(9)
-  sig1   = param6(10)
-
-  convergence6 = flag(cvg6)
-  outp6 = outp6;
-  for i=1:length(param6)
-    stdabw6(i) = sqrt(result6.covp(i, i));
-    mat6(i, 1) = param6(i);
-    mat6(i, 2) = 1*stdabw6(i);
-    mat6(i, 3) = 2*stdabw6(i);
-    mat6(i, 4) = 3*stdabw6(i);
-  endfor
-  stdabw6 = stdabw6';
-  mat6 = mat6
-
-  yFit6 = fun(cno, mu, beta, a3, da3, sig3, u3, eta, nu, alpha, lcc, sig1, q, cH, cN, cO, cS, dan, k, const1, const2, useQ, b, useA, density, sampleThickness, transmission, absorptionCorrection, useP, polarizedBeam, polarizationDegree, useGradient, g, useCorrAutoColl, par_r, par_delta, par_l, radiation, wavelength, x, coh, inc);
-
-  if shouldPlot == true
-    plot6 = figure(6, 'name', 'All parameters without normalization');
-    plot(x, yn, ".k;Data points;", "markersize", 10, x, yFit6, "r;Fit6;", "LineWidth", 3);
-	xlabel ("Modules of the scattering vector s / A^-^1");
-	ylabel ("Intensity I");
-	title ("6 - All without normalization");
-  endif
-
-  output(1, 1) = cellstr("s");
-  output(1, 2) = cellstr("iObs(s)");
-  for i=1:length(x)
-    output(i+1, 1) = x(i);
-    output(i+1, 2) = yFit6(i);
-  endfor
-  
-  cell2csv(strcat(fitPath, "/output_", id, "_", "6-all-without-normalization", ".csv"), output, ";");
-
-  saveFiles("6-all-without-normalization", x, yFit6, yn, cno, mu, beta, a3, da3, sig3, u3, eta, nu, alpha, lcc, sig1, q, cH, cN, cO, cS, dan, k, const1, const2, useQ, b, useA, density, sampleThickness, transmission, absorptionCorrection, useP, polarizedBeam, polarizationDegree, useGradient, g, useCorrAutoColl, par_r, par_delta, par_l, radiation, wavelength, s, coh, inc, fitPath, id);
 
   paramFinish = [cno; mu; beta; a3; da3; sig3; u3; eta; nu; alpha; sig1; lcc; q; dan; k; const1; const2; g];
 
@@ -1198,7 +1100,6 @@ endif
     saveas(plot3, (strcat(fitPath, "/3_normalisierung_", id, ".png")));
     saveas(plot4, (strcat(fitPath, "/4_lcc_", id, ".png")));
     saveas(plot5, (strcat(fitPath, "/5_all_", id, ".png")));
-    saveas(plot6, (strcat(fitPath, "/6_all_without_normalization_", id, ".png")));
     saveas(plot7, (strcat(fitPath, "/7_errorCount_", id, ".png")));
     saveas(plot8, (strcat(fitPath, "/8_allLog_", id, ".png")));
     saveas(plot9, (strcat(fitPath, "/9_errorCountLog_", id, ".png")));
@@ -1211,7 +1112,6 @@ endif
   "param3", "convergence3", "outp3", "result3", "stdabw3", "mat3",
   "param4", "convergence4", "outp4", "result4", "stdabw4", "mat4",
   "param5", "convergence5", "outp5", "result5", "stdabw5", "mat5",
-  "param6", "convergence6", "outp6", "result6", "stdabw6", "mat6",
   "rQuadratFit", "chiQuadratFit");
 
   "\n\n\n Refined values"
@@ -1220,19 +1120,19 @@ endif
   cno2     = 2*cno1;
   cno3     = 3*cno1;
   mu       = mu
-  mu1      = mat6(1, 2);
+  mu1      = mat5(1, 2);
   mu2      = 2*mu1;
   mu3      = 3*mu1;
   beta     = beta
-  beta1    = mat6(2, 2);
+  beta1    = mat5(2, 2);
   beta2    = 2*beta1;
   beta3    = 3*beta1;
   a3       = a3
-  a31      = mat6(3, 2);
+  a31      = mat5(3, 2);
   a32      = 2*a31;
   a33      = 3*a31;
   da3      = da3
-  da31     = mat6(4, 2);
+  da31     = mat5(4, 2);
   da32     = 2*da31;
   da33     = 3*da31;
   a3min    = a3-da3
@@ -1240,7 +1140,7 @@ endif
   a3min2   = 2*a3min1;
   a3min3   = 3*a3min1;
   sig3     = sig3
-  sig31    = mat6(5, 2);
+  sig31    = mat5(5, 2);
   sig32    = 2*sig31;
   sig33    = 3*sig31;
   u3       = u3;
@@ -1248,7 +1148,7 @@ endif
   u32      = 2*u31;
   u33      = 3*u31;
   eta      = eta
-  eta1     = mat6(6, 2);
+  eta1     = mat5(6, 2);
   eta2     = 2*eta1;
   eta3     = 3*eta1;
   nu       = nu
@@ -1256,15 +1156,15 @@ endif
   nu2      = 2*nu1;
   nu3      = 3*nu1;
   alpha    = alpha
-  alpha1   = mat6(7, 2);
+  alpha1   = mat5(7, 2);
   alpha2   = 2*alpha1;
   alpha3   = 3*alpha1;
   sig1     = sig1
-  sig11    = mat6(8, 2);
+  sig11    = mat5(8, 2);
   sig12    = 2*sig11;
   sig13    = 3*sig11;
   lcc      = lcc
-  lcc1     = mat6(9, 2);
+  lcc1     = mat5(9, 2);
   lcc2     = 2*lcc1;
   lcc3     = 3*lcc1;
   q        = q

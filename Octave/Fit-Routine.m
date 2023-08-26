@@ -78,9 +78,9 @@ coh = true;
 inc = true;
 
 #Type of x-values:
-#theta = Scattering angle theta in �
+#theta = Scattering angle theta in °
 #thetaRad = Scattering angle theta in rad.
-#twoTheta = Scattering angle 2 theta in �
+#twoTheta = Scattering angle 2 theta in °
 #twoThetaRad = Scattering angle 2 theta in rad.
 #scatS = Modules of the scattering vector s = 2*sin(theta)/wavelength
 #scatQ = Scattering vector q = 2*Pi*s
@@ -139,12 +139,20 @@ absorptionCorrection  = 1;       #Correction factor for absorption coefficient (
 
 useP                  = true;    #Polarization correction
 polarizedBeam         = false;   #Do you use a polarized beam?
-polarizationDegree    = 0;       #Polarization direction of beam in �.
+polarizationDegree    = 0;       #Polarization direction of beam in °.
 
 useCorrAutoColl = false;  #Slit correction
 par_r           = 14;	    #Radius of the diffractometer (Debye-Scherrer) in cm
-par_delta       = 4;	    #Divergence angle in � (it is converted as if this fixed slit were inside)
+par_delta       = 4;	    #Divergence angle in ° (it is converted as if this fixed slit were inside)
 par_l           = 5;	    #Irradiated length in cm
+
+#Lines below should be left as they are
+# # # # #
+ # # # # 
+# # # # #
+ # # # # 
+# # # # #
+#Lines below should be left as they are
 
 timestamp = strftime("%Y-%m-%d_%H-%M-%S", localtime(time()));
 global id = strcat(sampleId, "_", timestamp);
@@ -154,14 +162,6 @@ function fun = fun(cno, mu, beta, a3, da3, sig3, u3, eta, nu, alpha, lcc, sig1, 
   iObsOut = iObs(cno, mu, beta, a3, da3, sig3, u3, eta, nu, alpha, lcc, sig1, q, cH, cN, cO, cS, dan, k, const1, const2, useQ, b, useA, density, sampleThickness, transmission, absorptionCorrection, useP, polarizedBeam, polarizationDegree, useGradient, g, useCorrAutoColl, par_r, par_delta, par_l, radiation, wavelength, s, coh, inc);
   fun = iObsOut(2,:);
 endfunction
-
-#Lines below should be left as it is
-# # # # #
- # # # # 
-# # # # #
- # # # # 
-# # # # #
-#Lines below should be left as it is
 
 #Load optim package
 pkg load statistics;
